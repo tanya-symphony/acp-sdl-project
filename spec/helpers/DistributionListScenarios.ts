@@ -99,7 +99,8 @@ export async function checkDataStepCreateDL(initiator: DesktopClient, sdlName: s
 /**
  * Add member to SDL
  */
-export async function addMemberStepCreateDL(initiator: DesktopClient, testUser: TestUser) {
+export async function selectMemberStepCreateDL(initiator: DesktopClient, testUser: TestUser) {
+    await initiator.waitForVisible(`//*[./*/*/label[@for='user ${testUser.userId}']]/*[.='${testUser.displayname}']`);
     await initiator.waitForVisible("//label[@for='user " + testUser.userId + "']");
     await initiator.click("//label[@for='user " + testUser.userId + "']");
 }
@@ -142,4 +143,16 @@ export async function checkDLinList(initiator: DesktopClient, sdlName: string,
     await initiator.waitForVisible("//div[@role='row'][./*[.='" + sdlName + "']]//*[@class='external-pod-tag']"); }
     // tslint:disable-next-line:max-line-length
     await initiator.waitForVisible("//div[@role='row'][./*[.='" + sdlName + "']]//*[@class='list-text-cell']/span[.='" + membersCount + "']");
+}
+
+/**
+ * Delete DL
+ */
+export async function deleteDL(initiator: DesktopClient) {
+    await initiator.waitForVisibleWithText("//label[@for='want-to-delete']", "I want to delete this list");
+    await initiator.click("//label[@for='want-to-delete']");
+    await initiator.waitForVisibleWithText("//label[@for='acknowledge-delete']", "I acknowledge that this action cannot be undone");
+    await initiator.click("//label[@for='acknowledge-delete']");
+    await initiator.waitForVisible(".delete-list-button");
+    await initiator.click(".delete-list-button");
 }

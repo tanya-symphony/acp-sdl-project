@@ -14,6 +14,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
     let testUser02: TestUser;
     let testUser03: TestUser;
     let testUser04: TestUser;
+    let testUser05: TestUser;
     let pmpHelper: PmpUser;
     let value: string;
     const att1: string = "Confirmation";
@@ -39,9 +40,9 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
             /.*/,
         ];
         await pmpHelper.updatePodSetting("https://warpdrive-lab.dev.symphony.com/env/tetianak-pod1/sbe/support/v1/system/settings/enable-distribution-list-management", "ENABLE");
-        [testUser01, testUser02, testUser03] = await testClientHelper.setupTestUsers(["A", "B", "C"],
-            { entitlements: userEntitlements } );
         [testUser04] = await testClientHelper.setupTestUsers(["NoEntitlementsCanChat"]);
+        [testUser01, testUser02, testUser03, testUser05] = await testClientHelper.setupTestUsers(["A", "B", "C", "AddRemoveTest"],
+            { entitlements: userEntitlements } );
         [testClientA] = await testClientHelper.setupDesktopClients(["Tania"],
             {user: { roles: ["INDIVIDUAL", "DISTRIBUTION_LIST_MANAGER", "SUPER_ADMINISTRATOR", "L1_SUPPORT", "SUPER_COMPLIANCE_OFFICER"]}});
     });
@@ -50,11 +51,11 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         const startPageQuery = `?showHotSpots=0`;
         await testClientA.loadPage(testClientA.getStartPageUrl() + startPageQuery);
         await testClientA.waitForVisible("#nav-profile");
+        // Go from Client to Admin-console
+        await ACPNavigationScenarios.openACPfromClient1_5(testClientA);
     });
 
     it("should be able create internal DL with role DL Manager", async () => {
-        // Go from Client to Admin-console
-        await ACPNavigationScenarios.openACPfromClient1_5(testClientA);
         // Admin Session start
         await ACPNavigationScenarios.adminSessionStart(testClientA);
         // Distribution list
@@ -79,15 +80,17 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await testClientA.click("//button[contains(@class, 'add-members-button')]");
         await testClientA.waitForVisible("#members-search");
         await testClientA.waitForNotVisibleWithText(".warning-text.warning-text-block.info-text", "Only users that can chat in private external rooms will be shown in search results here.");
-        await DistributionListScenarios.addMemberStepCreateDL(testClientA, testUser01);
-        await DistributionListScenarios.addMemberStepCreateDL(testClientA, testUser02);
-        await DistributionListScenarios.addMemberStepCreateDL(testClientA, testUser03);
-        await DistributionListScenarios.addMemberStepCreateDL(testClientA, testUser04);
+        await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser01);
+        await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser02);
+        await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser03);
+        await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser04);
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser02.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser03.userId + "']]", "class");
+        await testClientA.assert(() => expect(value).toContain("is-selected"));
+        value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser04.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
         await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "4");
         await testClientA.waitForVisible("//*[contains(@class,'update-list-button')][.='Save the list']");
@@ -98,8 +101,6 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
     });
 
     it("should be able update internal DL with role DL Manager", async () => {
-        // Go from Client to Admin-console
-        await ACPNavigationScenarios.openACPfromClient1_5(testClientA);
         // Distribution list
         await ACPNavigationScenarios.goToDLPage(testClientA);
         // Check DL page
@@ -156,5 +157,86 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await testClientA.waitForNotVisible("//div[@role='row'][./*[.='" + sdlNameUpdate + "']]//*[@class='list-attribute-tag'][.='" + att2Update + "']");
         await DistributionListScenarios.checkDLinList(testClientA, sdlNameUpdate, null, null, att3Update, att4Update,
             externalType, 4);
+    });
+
+    it("should be able add member to internal DL with role DL Manager", async () => {
+        // Distribution list
+        await ACPNavigationScenarios.goToDLPage(testClientA);
+        // Check DL page
+        await DistributionListScenarios.checkDLPage(testClientA);
+        // Open Modal for DL update
+        await DistributionListScenarios.openModalForDLEdition(testClientA, sdlNameUpdate);
+        // Go to Member list
+        await testClientA.click("//button[contains(@class, 'add-members-button')]");
+        await testClientA.waitForVisible("#members-search");
+        await testClientA.waitForNotVisibleWithText(".warning-text.warning-text-block.info-text", "Only users that can chat in private external rooms will be shown in search results here.");
+        // Search and select user
+        await testClientA.setValue("#members-search", testUser05.displayname);
+        await testClientA.waitForVisible("//*[@class='members-search']/*[@class='reset-input-icon']");
+        await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "4");
+        await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser05);
+        await testClientA.click("//*[@class='members-search']/*[@class='reset-input-icon']");
+        value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser05.userId + "']]", "class");
+        await testClientA.assert(() => expect(value).toContain("is-selected"));
+        value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
+        await testClientA.assert(() => expect(value).toContain("is-selected"));
+        value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser02.userId + "']]", "class");
+        await testClientA.assert(() => expect(value).toContain("is-selected"));
+        value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser03.userId + "']]", "class");
+        await testClientA.assert(() => expect(value).toContain("is-selected"));
+        value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser04.userId + "']]", "class");
+        await testClientA.assert(() => expect(value).toContain("is-selected"));
+        await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "5");
+        await testClientA.waitForVisible("//*[contains(@class,'update-list-button')][.='Save the list']");
+        await testClientA.click("//*[contains(@class,'update-list-button')][.='Save the list']");
+        // Check DL in whole list
+        await DistributionListScenarios.checkDLinList(testClientA, sdlNameUpdate, null, null, att3Update, att4Update,
+            externalType, 5);
+    });
+
+    it("should be able remove member from internal DL with role DL Manager", async () => {
+        // Distribution list
+        await ACPNavigationScenarios.goToDLPage(testClientA);
+        // Check DL page
+        await DistributionListScenarios.checkDLPage(testClientA);
+        // Open Modal for DL update
+        await DistributionListScenarios.openModalForDLEdition(testClientA, sdlNameUpdate);
+        // Go to Member list
+        await testClientA.click("//button[contains(@class, 'add-members-button')]");
+        await testClientA.waitForVisible("#members-search");
+        await testClientA.waitForNotVisibleWithText(".warning-text.warning-text-block.info-text", "Only users that can chat in private external rooms will be shown in search results here.");
+        // Search and select user
+        await testClientA.setValue("#members-search", testUser05.displayname);
+        await testClientA.waitForVisible("//*[@class='members-search']/*[@class='reset-input-icon']");
+        await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "4");
+        await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser05);
+        await testClientA.click("//*[@class='members-search']/*[@class='reset-input-icon']");
+        value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
+        await testClientA.assert(() => expect(value).toContain("is-selected"));
+        value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser02.userId + "']]", "class");
+        await testClientA.assert(() => expect(value).toContain("is-selected"));
+        value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser03.userId + "']]", "class");
+        await testClientA.assert(() => expect(value).toContain("is-selected"));
+        value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser04.userId + "']]", "class");
+        await testClientA.assert(() => expect(value).toContain("is-selected"));
+        await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "4");
+        await testClientA.waitForVisible("//*[contains(@class,'update-list-button')][.='Save the list']");
+        await testClientA.click("//*[contains(@class,'update-list-button')][.='Save the list']");
+        // Check DL in whole list
+        await DistributionListScenarios.checkDLinList(testClientA, sdlNameUpdate, null, null, att3Update, att4Update,
+            externalType, 4);
+    });
+
+    it("should be able delete internal DL with role DL Manager", async () => {
+        // Distribution list
+        await ACPNavigationScenarios.goToDLPage(testClientA);
+        // Check DL page
+        await DistributionListScenarios.checkDLPage(testClientA);
+        // Open Modal for DL update
+        await DistributionListScenarios.openModalForDLEdition(testClientA, sdlNameUpdate);
+        // Delete DL
+        await DistributionListScenarios.deleteDL(testClientA);
+        await testClientA.waitForNotVisible(".distribution-lists-modal");
+        await testClientA.waitForVisible("//*[contains(@class,'list-name-box-with-tag')][.='" + sdlNameUpdate + "']");
     });
 });
