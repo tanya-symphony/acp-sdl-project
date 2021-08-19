@@ -1,17 +1,15 @@
 import {
-    AdminUser,
     describeWithTestClient,
     DesktopClient,
     TestClientFactory,
 } from "@symphony/rtc-greenkeeper-lib";
 import {PmpUser} from "@symphony/rtc-greenkeeper-lib/dist/TestClientFactory";
+import * as ACPNavigationScenarios from "../helpers/ACPNavigationScenarios";
 
 describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: TestClientFactory) => {
     let testClientA: DesktopClient;
     let pmpHelper: PmpUser;
-    let adminUser: AdminUser;
     pmpHelper = testClientHelper.getPmpUser(["SP_CAN_MODIFY_POD_CONF"]);
-    adminUser = testClientHelper.getAdmin();
 
     before(async () => {
         // Allowing all errors from client since this is just an example project
@@ -31,16 +29,9 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
 
     it("do not show Distribution list menu for non-SDL manager", async () => {
         // Go from Client to Admin-console
-        await testClientA.click("#toolbar-settings");
-        await testClientA.waitForVisible("#generalSettingsTrigger");
-        await testClientA.click("#generalSettingsTrigger");
-        await testClientA.waitForVisible(".show-admin-link");
-        await testClientA.click(".show-admin-link");
+        await ACPNavigationScenarios.openACPfromClient1_5(testClientA);
         // Admin Session start
-        await testClientA.waitForVisible(".auth");
-        await testClientA.waitForVisible("//*[@data-test-id='MId2Y5ONzB']");
-        await testClientA.click("//*[@data-test-id='MId2Y5ONzB']");
-        await testClientA.waitForVisible("#left-nav");
+        await ACPNavigationScenarios.adminSessionStart(testClientA);
         // Distribution list
         await testClientA.waitForNotVisible(".distributionLists");
     });
