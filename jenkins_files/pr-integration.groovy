@@ -130,6 +130,7 @@ def podEntitlements = """
 abortPreviousRunningBuilds()
 
 node {
+    def httpsPrefix = "https:"
     def pod1Name = params.TEST_EPOD_1
     def testSupportPortalKeyStore = params.TEST_SUPPORT_PORTAL_KEYSTORE_CREDS_ID ?: "test.support.portal.keystore"
     def testSupportPortalKeyStorePassword = params.TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD_CREDS_ID ?: "test.support.portal.keystore.password"
@@ -143,8 +144,8 @@ node {
                 }
                 withCredentials([string(credentialsId: 'bff_keystore', variable: 'KEYSTORE')]) {
                     withEnv([
-                            "BACKEND_URL=https://${pod1Name}",
-                            "START_PAGE_URL=https://${pod1Name}${params.START_PAGE_URL}",
+                            "BACKEND_URL=${httpsPrefix}${pod1Name}",
+                            "START_PAGE_URL=${httpsPrefix}${pod1Name}${params.START_PAGE_URL}",
                             "ADMIN_USER=${adminUser}",
                             "ADMIN_PWD=${adminPassword}",
                             "TEST_SUPPORT_PORTAL_KEYSTORE=${testSupportPortalKeyStore}",
