@@ -11,8 +11,8 @@ def sfeLiteHashHeaded = ""
 // Paramaters for building new pod
 def jobName = "${env.JOB_BASE_NAME}".toLowerCase()
 def deploymentName = "${jobName}-${env.BUILD_NUMBER}-" + UUID.randomUUID().toString().take(4).replaceAll("[^a-zA-Z0-9-]+", "-")
-def testPod1 = params.IS_BUILD_EPOD ? cicdUtils.getPodUrl("${deploymentName}-pod1") : params.TEST_EPOD_1
-def testPod2 = params.IS_BUILD_EPOD ? cicdUtils.getPodUrl("${deploymentName}-pod2") : params.TEST_EPOD_2
+def testPod1 = params.TEST_EPOD_1
+def testPod2 = params.TEST_EPOD_2
 def sfeLiteOrg = params.SFE_LITE_GIT_ORG
 def sfeLiteBranch = params.SFE_LITE_GIT_BRANCH
 def clientBffOrg = params.CLIENT_BFF_GIT_ORG
@@ -130,7 +130,7 @@ def podEntitlements = """
 abortPreviousRunningBuilds()
 
 node {
-    def httpsPrefix = "https:"
+    def httpsPrefix = "https://"
     def pod1Name = params.TEST_EPOD_1
     def testSupportPortalKeyStore = params.TEST_SUPPORT_PORTAL_KEYSTORE_CREDS_ID ?: "test.support.portal.keystore"
     def testSupportPortalKeyStorePassword = params.TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD_CREDS_ID ?: "test.support.portal.keystore.password"
