@@ -143,8 +143,8 @@ node {
                 }
                 withCredentials([string(credentialsId: 'bff_keystore', variable: 'KEYSTORE')]) {
                     withEnv([
-                            "BACKEND_URL=${pod1Name}",
-                            "START_PAGE_URL=${pod1Name}${params.START_PAGE_URL}",
+                            "BACKEND_URL=https://${pod1Name}",
+                            "START_PAGE_URL=https://${pod1Name}${params.START_PAGE_URL}",
                             "ADMIN_USER=${adminUser}",
                             "ADMIN_PWD=${adminPassword}",
                             "TEST_SUPPORT_PORTAL_KEYSTORE=${testSupportPortalKeyStore}",
@@ -156,8 +156,8 @@ node {
                             --run-chrome-in-docker \
                             --adminName $ADMIN_USER --adminPwd $ADMIN_PWD \
                             --log-base-dir \"${env.BUILD_URL}/artifact/\" \
-                            --start-page-url https://${START_PAGE_URL} 
-                            --backend-url https://${BACKEND_URL}.symphony.com/admin-console
+                            --start-page-url ${START_PAGE_URL} 
+                            --backend-url ${BACKEND_URL}.symphony.com/admin-console
                             --support-portal-keystore-path \"${TEST_SUPPORT_PORTAL_KEYSTORE}\" 
                             --support-portal-keystore-password \"${TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD}\"
                             --support-portal-keystore-alias \"${TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS}\"
