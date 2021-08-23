@@ -145,8 +145,8 @@ def returnGreenkeeperStage(stageNum, parallelRuns, sfeLiteHashHeaded, sfeLiteOrg
                 def urlSearchParams = (params.URL_SEARCH_PARAMS instanceof String && !params.URL_SEARCH_PARAMS.isEmpty()) ? "--url-search-params ${params.URL_SEARCH_PARAMS}" : ""
 
                 withEnv([
-                        "BACKEND_URL=${pod1Name},${pod2Name}",
-                        "START_PAGE_URL=${pod1Name}${params.START_PAGE_URL},${pod2Name}${params.START_PAGE_URL}",
+                        "BACKEND_URL=${pod1Name}",
+                        "START_PAGE_URL=${pod1Name}${params.START_PAGE_URL}",
                         "ADMIN_USER=${adminUser}",
                         "ADMIN_PWD=${adminPassword}",
                         "TEST_ARGS=--testSuiteName Validation-Test-${stageNum} --bucket ${stageNum}:${parallelRuns} --capture-interface ens4 ${params.TEST_ARGS} ${urlSearchParams}",
@@ -183,6 +183,11 @@ def returnGreenkeeperStage(stageNum, parallelRuns, sfeLiteHashHeaded, sfeLiteOrg
 
 node {
     try {
+        checkout scm
+        withNvm("v10.3.0", "npmrcFile") {
+            stage("Install") {
+                sh "npm install"
+            }
         if (params.IS_BUILD_EPOD) { // Run with new pod
             withCredentials([string(credentialsId: 'bff_keystore', variable: 'KEYSTORE')]) {
                 withEnv([
