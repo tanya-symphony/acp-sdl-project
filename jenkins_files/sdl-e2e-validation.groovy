@@ -164,7 +164,14 @@ def returnGreenkeeperStage(stageNum, parallelRuns, sfeLiteHashHeaded, sfeLiteOrg
                         "BOT_PRIVKEY_RSA_CREDS_ID=${botPrivateKeyRSA}",
                         "STORAGE_BASE_URL=gs://sym-epod-cache"
                 ]) {
-                    runGreenKeeperTest(sfeLiteHashHeaded)
+                    // runGreenKeeperTest(sfeLiteHashHeaded)
+                        sh """npm run sdl-admin-test -- --verbose 2 \
+                            --run-chrome-in-docker \
+                            --adminName $ADMIN_USER --adminPwd $ADMIN_PWD \
+                            --log-base-dir \"${env.BUILD_URL}/artifact/\" \
+                            --backend-url $BACKEND_URL/sbe/admin-console \
+                            --start-page-url $START_PAGE_URL
+                        """
                 }
             } catch (error) {
                 println "Error on Validation Test - ${stageNum}: ${error}"
@@ -227,7 +234,7 @@ node {
                 ]) {
                     xpod(2) {
                         sfeLiteHashHeaded = env.SFE_LITE_GIT_HASH
-                        cicdUtils.gitCloneToSubdirectory("./ACP-SDL", sfeLiteBranch, "https://github.com/tanya-symphony/acp-sdl-project.git")
+                        cicdUtils.gitCloneToSubdirectory("./ACP-SDL", "master", "https://github.com/tanya-symphony/acp-sdl-project.git")
                         parallel(new ArrayList(1..parallelRuns).collectEntries {index -> [("Validation Test - ${index}"): returnGreenkeeperStage(index, parallelRuns, sfeLiteHashHeaded, sfeLiteOrg, sfeLiteBranch, testPod1, testPod2, adminUser, adminPassword)]})
 
                         // Give a while for developers to debug issues on the current pod
@@ -254,11 +261,6 @@ node {
                     archiveArtifacts artifacts: "fullReport/**/*", allowEmptyArchive: true, fingerprint: true
                 }
 
-                if(enablePushNotification == true) {
-                    testStats = getTestSummary(env.BUILD_URL)
-                    def messageContent = getNotificationContent(testStats)
-                    notificationUtils.sendMessageML2SymphonyNotification(messageContent, env.SYMPHONY_NOTIFICATION_URL)
-                }
             } catch (error) {
                 echo "Error while collecting reports: ${error}"
                 error.printStackTrace()
@@ -297,51 +299,4 @@ def getTestSummary(url) {
             unexpectedFailure: false,
             tagsIncluded: params.TEST_ARGS
     ]
-}
-
-def getNotificationContent(testStatus) {
-    String messageMlContents = """
-	<div>
-		<card class="card barStyle" data-icon-src="https://i.imgur.com/vTZL1ky.png" data-accent-color="tempo-bg-color--gray">
-			<div class="cardHeader">
-				<h5 class="tempo-text-color--normal">
-					Jenkins Run <a href="${env.BUILD_URL}">#${env.BUILD_NUMBER}</a> | ${testStatus.testRunName} | SFE-Lite: ${testStatus.sfeBranch} | Tag: ${testStatus.tagsIncluded} | ${testStatus.date}
-				</h5>
-				<a href="${testStatus.downstreamJobUrl}/testReport/">See Report</a> | 
-				<a href="${testStatus.downstreamJobUrl}/artifact/fullReport/report.html">See Full Report</a>
-				<table>
-					<thead>
-					   <tr>
-						  <td class="tempo-text-color--normal">
-							 <h6>Tests executed:</h6>
-						  </td>
-						  <td class="tempo-text-color--green">
-							 <h6>Passing tests:</h6>
-						  </td>
-						  <td class="tempo-text-color--red">
-							 <h6>Failing tests:</h6>
-						  </td>
-						  <td class="tempo-text-color--gray">
-							 <h6>Untested tests:</h6>
-						  </td>
-						  <td class="tempo-text-color--normal">
-							 <h6>Pass percentage:</h6>
-						  </td>
-					   </tr>
-					</thead>
-					<tbody>
-					   <tr>
-						  <td class="tempo-text-color--normal">${testStatus.totalCount}</td>
-						  <td class="tempo-text-color--green">${testStatus.passCount}</td>
-						  <td class="tempo-text-color--red">${testStatus.failCount}</td>
-						  <td class="tempo-text-color--gray">${testStatus.skipCount}</td>
-						  <td class="tempo-text-color--normal">${testStatus.passPercentage}%</td>
-					   </tr>
-					</tbody>
-				</table>
-			</div>
-		</card>
-    </div>
-"""
-    return messageMlContents
 }
