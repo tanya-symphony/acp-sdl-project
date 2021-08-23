@@ -168,8 +168,8 @@ def returnGreenkeeperStage(stageNum, parallelRuns, sfeLiteHashHeaded, sfeLiteOrg
                         sh """npm run sdl-admin-test -- --verbose 2 \
                             --run-chrome-in-docker \
                             --adminName $ADMIN_USER --adminPwd $ADMIN_PWD \
-                            --log-base-dir \"${env.BUILD_URL}/artifact/\" \
-                            --backend-url $BACKEND_URL/sbe/admin-console \
+                            --log-base-dir \"${env.BUILD_URL}artifact/\" \
+                            --backend-url $BACKEND_URL/admin-console \
                             --start-page-url $START_PAGE_URL
                         """
                 }
