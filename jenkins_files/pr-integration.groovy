@@ -3,7 +3,7 @@
 // Source @ https://github.com/SymphonyOSF/SFE-RTC-pipeline/tree/master/vars
 @Library('SFE-RTC-pipeline') _
 
-def testPod1 = params.IS_BUILD_EPOD ? cicdUtils.getPodUrl("${deploymentName}-pod1") : params.TEST_EPOD_1
+def testPod1 = params.TEST_EPOD_1
 def adminUser = params.ADMIN_USER
 def adminPassword = params.ADMIN_PWD
 
@@ -27,12 +27,12 @@ node {
                         "ADMIN_USER=${adminUser}",
                         "ADMIN_PWD=${adminPassword}"
                 ]) {
-                    stage("Test client plain") {
+                    stage("Test acp-admin sdl tests") {
                         sh """npm run sdl-admin-test -- --verbose 2 \
                             --run-chrome-in-docker \
                             --adminName $ADMIN_USER --adminPwd $ADMIN_PWD \
                             --log-base-dir \"${env.BUILD_URL}/artifact/\" \
-                            --backend-url https://$BACKEND_URL.symphony.com
+                            --backend-url https://$BACKEND_URL.symphony.com/admin-console
                         """
                     }
                 }
