@@ -10,7 +10,7 @@ def adminPassword = params.ADMIN_PWD
 abortPreviousRunningBuilds()
 
 node {
-    def pod1Name = (stageNum % 2) ? testPod1 : testPod2
+    def pod1Name = params.TEST_EPOD_1
     def testSupportPortalKeyStore = params.TEST_SUPPORT_PORTAL_KEYSTORE_CREDS_ID ?: "test.support.portal.keystore"
     def testSupportPortalKeyStorePassword = params.TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD_CREDS_ID ?: "test.support.portal.keystore.password"
     def testSupportPortalKeyStoreAlias = params.TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS ?: "support-alias"
