@@ -14,7 +14,7 @@ properties([
 
 abortPreviousRunningBuilds()
 
-node("${params.JENKINS_NODE_LABEL}") {
+node {
         cleanWs()
         try {
             checkout scm
