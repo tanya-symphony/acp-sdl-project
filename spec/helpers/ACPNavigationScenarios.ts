@@ -27,6 +27,14 @@ export async function adminSessionStart(initiator: DesktopClient) {
  * Go to DL page
  */
 export async function goToDLPage(initiator: DesktopClient) {
-    await initiator.waitForVisible(".distributionLists");
-    await initiator.click(".distributionLists");
+    await initiator.waitForVisible(acpElements.distributionListsMenu);
+    await initiator.click(acpElements.distributionListsMenu);
+}
+
+/**
+ * Go to DL page
+ */
+export async function goToCreateAnAccountPage(initiator: DesktopClient) {
+    await initiator.waitForVisible(acpElements.createUserMenu);
+    await initiator.click(acpElements.createUserMenu);
 }
