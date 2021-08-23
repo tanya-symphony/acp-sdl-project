@@ -153,10 +153,11 @@ node {
                             --run-chrome-in-docker \
                             --adminName $ADMIN_USER --adminPwd $ADMIN_PWD \
                             --log-base-dir \"${env.BUILD_URL}/artifact/\" \
+                            --start-page-url https://${START_PAGE_URL} 
                             --backend-url https://${BACKEND_URL}.symphony.com/admin-console
-                            --support-portal-keystore-path ${testSupportPortalKeyStore} 
-                            --support-portal-keystore-password ${testSupportPortalKeyStorePassword} 
-                            --support-portal-keystore-alias ${testSupportPortalKeyStoreAlias}
+                            --support-portal-keystore-path \"${testSupportPortalKeyStore}\" 
+                            --support-portal-keystore-password \"${testSupportPortalKeyStorePassword}\"
+                            --support-portal-keystore-alias \"${testSupportPortalKeyStoreAlias}\"
                         """
                         }
                     }
