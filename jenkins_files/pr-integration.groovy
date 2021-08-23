@@ -1,10 +1,8 @@
 @Library("sym-pipeline@master") _
+@Library('SFE-RTC-pipeline')
 
 import groovy.json.JsonSlurperClassic
 import com.symphony.cicd.SymphonyCICDUtils
-import com.symphony.cicd.build.YarnBuilder
-import com.symphony.cicd.YarnAppDescriptor
-import com.symphony.cicd.NotificationUtils
 
 SymphonyCICDUtils cicdUtils = new SymphonyCICDUtils()
 NotificationUtils notificationUtils = new NotificationUtils()
