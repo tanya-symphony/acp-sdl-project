@@ -154,6 +154,9 @@ node {
                             --adminName $ADMIN_USER --adminPwd $ADMIN_PWD \
                             --log-base-dir \"${env.BUILD_URL}/artifact/\" \
                             --backend-url https://${BACKEND_URL}.symphony.com/admin-console
+                            --support-portal-keystore-path ${testSupportPortalKeyStore} 
+                            --support-portal-keystore-password ${testSupportPortalKeyStorePassword} 
+                            --support-portal-keystore-alias ${testSupportPortalKeyStoreAlias}
                         """
                         }
                     }
