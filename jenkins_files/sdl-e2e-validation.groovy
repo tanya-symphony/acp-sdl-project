@@ -184,8 +184,6 @@ def returnGreenkeeperStage(stageNum, parallelRuns, sfeLiteHashHeaded, sfeLiteOrg
 node {
     cleanWs()
     try {
-        checkout scm
-        withNvm("v10.3.0", "npmrcFile") {
             stage("Install") {
                 sh "npm install"
             }
@@ -252,7 +250,7 @@ node {
             // sfeLiteHashHeaded = YarnBuilder.yarnCacheBuildOrDownloadIt(env, steps, YarnAppDescriptor.SFE_LITE, sfeLiteOrg, sfeLiteBranch)
             parallel(new ArrayList(1..parallelRuns).collectEntries {index -> [("Validation Test - ${index}"): returnGreenkeeperStage(index, parallelRuns, sfeLiteHashHeaded, sfeLiteOrg, sfeLiteBranch, testPod1, testPod2, adminUser, adminPassword)]})
         }
-    } } catch (error) {
+    } catch (error) {
         error.printStackTrace()
         currentBuild.setDescription("Error while running test: ${error}")
         currentBuild.buildResult = 'FAILURE'
