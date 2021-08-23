@@ -181,7 +181,7 @@ def returnGreenkeeperStage(stageNum, parallelRuns, sfeLiteHashHeaded, sfeLiteOrg
     }
 }
 
-node("${params.JENKINS_NODE_LABEL}") {
+node {
     cleanWs()
     try {
         checkout scm
