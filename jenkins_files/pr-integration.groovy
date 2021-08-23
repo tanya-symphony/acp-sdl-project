@@ -18,7 +18,7 @@ node {
         cleanWs()
         try {
             checkout scm
-            withNvm("v10.3.0", "npmrcFile") {
+            withNvm("v12.18.3", "npmrcFile") {
                 stage("Install") {
                     sh "npm install"
                 }
