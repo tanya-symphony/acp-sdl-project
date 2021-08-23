@@ -182,11 +182,7 @@ def returnGreenkeeperStage(stageNum, parallelRuns, sfeLiteHashHeaded, sfeLiteOrg
 }
 
 node {
-    cleanWs()
-    try {
-            stage("Install") {
-                sh "yarn install"
-            }
+    try {                                      
         if (params.IS_BUILD_EPOD) { // Run with new pod
             withCredentials([string(credentialsId: 'bff_keystore', variable: 'KEYSTORE')]) {
                 withEnv([
@@ -247,7 +243,7 @@ node {
                 }
             }
         } else { // Run with existing pod
-            // sfeLiteHashHeaded = YarnBuilder.yarnCacheBuildOrDownloadIt(env, steps, YarnAppDescriptor.SFE_LITE, sfeLiteOrg, sfeLiteBranch)
+            sfeLiteHashHeaded = YarnBuilder.yarnCacheBuildOrDownloadIt(env, steps, YarnAppDescriptor.SFE_LITE, sfeLiteOrg, sfeLiteBranch)
             cicdUtils.gitCloneToSubdirectory("./ACP-SDL", "master", "https://github.com/tanya-symphony/acp-sdl-project.git")
             parallel(new ArrayList(1..parallelRuns).collectEntries {index -> [("Validation Test - ${index}"): returnGreenkeeperStage(index, parallelRuns, sfeLiteHashHeaded, sfeLiteOrg, sfeLiteBranch, testPod1, testPod2, adminUser, adminPassword)]})
         }
