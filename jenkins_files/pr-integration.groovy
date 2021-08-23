@@ -5,7 +5,6 @@ import groovy.json.JsonSlurperClassic
 import com.symphony.cicd.SymphonyCICDUtils
 
 SymphonyCICDUtils cicdUtils = new SymphonyCICDUtils()
-NotificationUtils notificationUtils = new NotificationUtils()
 
 int parallelRuns = params.PARALLEL_TEST_STAGES as Integer
 def sfeLiteHashHeaded = ""
