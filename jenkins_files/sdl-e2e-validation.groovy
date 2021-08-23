@@ -243,7 +243,7 @@ node {
                 }
             }
         } else { // Run with existing pod
-            sfeLiteHashHeaded = YarnBuilder.yarnCacheBuildOrDownloadIt(env, steps, YarnAppDescriptor.SFE_LITE, sfeLiteOrg, sfeLiteBranch)
+            // sfeLiteHashHeaded = YarnBuilder.yarnCacheBuildOrDownloadIt(env, steps, YarnAppDescriptor.SFE_LITE, sfeLiteOrg, sfeLiteBranch)
             parallel(new ArrayList(1..parallelRuns).collectEntries {index -> [("Validation Test - ${index}"): returnGreenkeeperStage(index, parallelRuns, sfeLiteHashHeaded, sfeLiteOrg, sfeLiteBranch, testPod1, testPod2, adminUser, adminPassword)]})
         }
     } catch (error) {
