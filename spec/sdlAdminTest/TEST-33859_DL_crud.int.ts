@@ -9,6 +9,7 @@ import * as ACPNavigationScenarios from "../helpers/ACPNavigationScenarios";
 import * as DistributionListScenarios from "../helpers/DistributionListScenarios";
 
 describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: TestClientFactory) => {
+    // Test Data
     let testClientA: DesktopClient;
     let testUser01: TestUser;
     let testUser02: TestUser;
@@ -39,7 +40,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         TestClientFactory.globalLogWhitelist = [
             /.*/,
         ];
-        await pmpHelper.updatePodSetting("https://warpdrive-lab.dev.symphony.com/env/tetianak-pod1/sbe/support/v1/system/settings/enable-distribution-list-management", "ENABLE");
+        // await pmpHelper.updatePodSetting("https://warpdrive-lab.dev.symphony.com/env/tetianak-pod1/sbe/support/v1/system/settings/enable-distribution-list-management", "ENABLE");
         [testUser01, testUser02, testUser03, testUser05] = await testClientHelper.setupTestUsers(["A", "B", "C", "AddRemoveTest"],
             { entitlements: userEntitlements } );
         [testUser04] = await testClientHelper.setupTestUsers(["NoEntitlementsCanChat"]);

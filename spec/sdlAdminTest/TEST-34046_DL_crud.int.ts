@@ -39,7 +39,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         TestClientFactory.globalLogWhitelist = [
             /.*/,
         ];
-        await pmpHelper.updatePodSetting("https://warpdrive-lab.dev.symphony.com/env/tetianak-pod1/sbe/support/v1/system/settings/enable-distribution-list-management", "ENABLE");
+        // await pmpHelper.updatePodSetting("https://warpdrive-lab.dev.symphony.com/env/tetianak-pod1/sbe/support/v1/system/settings/enable-distribution-list-management", "ENABLE");
         [testUser04] = await testClientHelper.setupTestUsers(["NoEntitlementsCanChat"]);
         [testUser01, testUser02, testUser03, testUser05] = await testClientHelper.setupTestUsers(["A", "B", "C", "AddRemoveTest"],
             { entitlements: userEntitlements } );
@@ -171,6 +171,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await testClientA.waitForVisible("#members-search");
         await testClientA.waitForNotVisibleWithText(".warning-text.warning-text-block.info-text", "Only users that can chat in private external rooms will be shown in search results here.");
         // Search and select user
+        await testClientA.sleep(500);
         await testClientA.setValue("#members-search", testUser05.displayname);
         await testClientA.waitForVisible("//*[@class='members-search']/*[@class='reset-input-icon']");
         await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "4");
@@ -206,9 +207,10 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await testClientA.waitForVisible("#members-search");
         await testClientA.waitForNotVisibleWithText(".warning-text.warning-text-block.info-text", "Only users that can chat in private external rooms will be shown in search results here.");
         // Search and select user
+        await testClientA.sleep(500);
         await testClientA.setValue("#members-search", testUser05.displayname);
         await testClientA.waitForVisible("//*[@class='members-search']/*[@class='reset-input-icon']");
-        await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "4");
+        await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "5");
         await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser05);
         await testClientA.click("//*[@class='members-search']/*[@class='reset-input-icon']");
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
