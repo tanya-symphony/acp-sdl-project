@@ -3,18 +3,17 @@
 // Source @ https://github.com/SymphonyOSF/SFE-RTC-pipeline/tree/master/vars
 @Library('SFE-RTC-pipeline') _
 
-properties([
-    parameters([
-        string(name: "POD_NAME", defaultValue: "st2", description: "Name of the pod to run tests against"),
-        string(name: "POD_ADMIN_CREDS_ID", defaultValue: "st2admin", description: "Id of jenkins credentials for pod admin username/password"),
-        string(name: "JENKINS_NODE_LABEL", defaultValue: "fe-integration", description: "Label for the jenkins node which the job will run on"),
-        string(name: "TEST_USERS_SUFFIX", defaultValue: "$env.BRANCH_NAME", description: "Suffix of test users"),
-    ])
-])
+def testPod1 = params.IS_BUILD_EPOD ? cicdUtils.getPodUrl("${deploymentName}-pod1") : params.TEST_EPOD_1
+def adminUser = params.ADMIN_USER
+def adminPassword = params.ADMIN_PWD
 
 abortPreviousRunningBuilds()
 
 node {
+    def pod1Name = (stageNum % 2) ? testPod1 : testPod2
+    def testSupportPortalKeyStore = params.TEST_SUPPORT_PORTAL_KEYSTORE_CREDS_ID ?: "test.support.portal.keystore"
+    def testSupportPortalKeyStorePassword = params.TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD_CREDS_ID ?: "test.support.portal.keystore.password"
+    def testSupportPortalKeyStoreAlias = params.TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS ?: "support-alias"
         cleanWs()
         try {
             checkout scm
@@ -22,15 +21,18 @@ node {
                 stage("Install") {
                     sh "npm install"
                 }
-                withCredentials([
-                    usernamePassword(credentialsId: "${params.POD_ADMIN_CREDS_ID}", usernameVariable: "ADMIN_USER", passwordVariable: "ADMIN_PWD"),
+                withEnv([
+                        "BACKEND_URL=${pod1Name}",
+                        "START_PAGE_URL=${pod1Name}${params.START_PAGE_URL}",
+                        "ADMIN_USER=${adminUser}",
+                        "ADMIN_PWD=${adminPassword}"
                 ]) {
                     stage("Test client plain") {
                         sh """npm run sdl-admin-test -- --verbose 2 \
                             --run-chrome-in-docker \
                             --adminName $ADMIN_USER --adminPwd $ADMIN_PWD \
                             --log-base-dir \"${env.BUILD_URL}/artifact/\" \
-                            --backend-url https://${params.POD_NAME}.symphony.com
+                            --backend-url https://$BACKEND_URL.symphony.com
                         """
                     }
                 }
