@@ -146,7 +146,10 @@ node {
                             "BACKEND_URL=${pod1Name}",
                             "START_PAGE_URL=${pod1Name}${params.START_PAGE_URL}",
                             "ADMIN_USER=${adminUser}",
-                            "ADMIN_PWD=${adminPassword}"
+                            "ADMIN_PWD=${adminPassword}",
+                            "TEST_SUPPORT_PORTAL_KEYSTORE=${testSupportPortalKeyStore}",
+                            "TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD=${testSupportPortalKeyStorePassword}",
+                            "TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS=${testSupportPortalKeyStoreAlias}"
                     ]) {
                         stage("Test acp-admin sdl tests") {
                             sh """npm run sdl-admin-test -- --verbose 2 \
@@ -155,9 +158,9 @@ node {
                             --log-base-dir \"${env.BUILD_URL}/artifact/\" \
                             --start-page-url https://${START_PAGE_URL} 
                             --backend-url https://${BACKEND_URL}.symphony.com/admin-console
-                            --support-portal-keystore-path \"${testSupportPortalKeyStore}\" 
-                            --support-portal-keystore-password \"${testSupportPortalKeyStorePassword}\"
-                            --support-portal-keystore-alias \"${testSupportPortalKeyStoreAlias}\"
+                            --support-portal-keystore-path \"${TEST_SUPPORT_PORTAL_KEYSTORE}\" 
+                            --support-portal-keystore-password \"${TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD}\"
+                            --support-portal-keystore-alias \"${TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS}\"
                         """
                         }
                     }
