@@ -252,7 +252,7 @@ node("${params.JENKINS_NODE_LABEL}") {
             // sfeLiteHashHeaded = YarnBuilder.yarnCacheBuildOrDownloadIt(env, steps, YarnAppDescriptor.SFE_LITE, sfeLiteOrg, sfeLiteBranch)
             parallel(new ArrayList(1..parallelRuns).collectEntries {index -> [("Validation Test - ${index}"): returnGreenkeeperStage(index, parallelRuns, sfeLiteHashHeaded, sfeLiteOrg, sfeLiteBranch, testPod1, testPod2, adminUser, adminPassword)]})
         }
-    } catch (error) {
+    } } catch (error) {
         error.printStackTrace()
         currentBuild.setDescription("Error while running test: ${error}")
         currentBuild.buildResult = 'FAILURE'
