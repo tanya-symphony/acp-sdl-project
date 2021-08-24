@@ -145,8 +145,10 @@ node {
         try {
             checkout scm
             withNvm("v12.18.3", "npmrcFile") {
-                stage("Install") {
-                    sh "yarn install"
+                withYvm("v1.15.2") {
+                    stage("Install") {
+                        sh "yarn install"
+                    }
                 }
                 withCredentials([ usernamePassword(credentialsId: "${params.POD_ADMIN_CREDS_ID}", usernameVariable: "ADMIN_USER", passwordVariable: "ADMIN_PWD"),
                                   file(credentialsId: "${testSupportPortalKeyStore}", variable: 'SUPPORT_PORTAL_KEYSTORE'),
