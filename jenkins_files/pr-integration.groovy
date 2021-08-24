@@ -151,6 +151,7 @@ node {
                 }
                 withCredentials([
                         usernamePassword(credentialsId: "${params.POD_ADMIN_CREDS_ID}", usernameVariable: "ADMIN_USER", passwordVariable: "ADMIN_PWD"),
+                ])
                     withEnv([
                             "BACKEND_URL=${httpsPrefix}${pod1Name}",
                             "START_PAGE_URL=${httpsPrefix}${pod1Name}${params.START_PAGE_URL}",
@@ -175,7 +176,6 @@ node {
                     }
                 }
             }
-        }
         finally {
             stage("Archive artifacts") {
                 try {
