@@ -129,7 +129,10 @@ def podEntitlements = """
 
 properties([
         parameters([
-                string(name: "POD_ADMIN_CREDS_ID", defaultValue: "qa-automation", description: "Id of jenkins credentials for pod admin username/password")
+                string(name: "POD_ADMIN_CREDS_ID", defaultValue: "qa-automation", description: "Id of jenkins credentials for pod admin username/password"),
+                string(name: "TEST_SUPPORT_PORTAL_KEYSTORE_CREDS_ID", defaultValue: "test.support.portal.keystore", description: "test.support.portal.keystore"),
+                string(name: "TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD_CREDS_ID", defaultValue: "test.support.portal.keystore.password", description: "test.support.portal.keystore"),
+                string(name: "TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS", defaultValue: "support-alias", description: "test.support.portal.keystore")
         ])
 ])
 
@@ -140,7 +143,7 @@ node {
     def pod1Name = params.TEST_EPOD_1
     def testSupportPortalKeyStore = params.TEST_SUPPORT_PORTAL_KEYSTORE_CREDS_ID ?: "test.support.portal.keystore"
     def testSupportPortalKeyStorePassword = params.TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD_CREDS_ID ?: "test.support.portal.keystore.password"
-    def testSupportPortalKeyStoreAlias = params.TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS ?: "support-alias-dev"
+    def testSupportPortalKeyStoreAlias = params.TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS ?: "support-alias"
         cleanWs()
         try {
             checkout scm
