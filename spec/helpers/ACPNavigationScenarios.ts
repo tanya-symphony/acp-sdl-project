@@ -38,3 +38,28 @@ export async function goToCreateAnAccountPage(initiator: DesktopClient) {
     await initiator.waitForVisible(acpElements.createUserMenu);
     await initiator.click(acpElements.createUserMenu);
 }
+
+/**
+ * Go to DL page
+ */
+export async function logOut(initiator: DesktopClient) {
+    await initiator.waitForVisible(acpElements.accountNameLabel);
+    await initiator.moveMouseTo(acpElements.accountNameLabel);
+    await initiator.waitForVisible(acpElements.logOutLink);
+    await initiator.click(acpElements.logOutLink);
+    await initiator.waitForVisible(acpElements.signInButton);
+}
+
+/**
+ * Login
+ */
+export async function loginACP(initiator: DesktopClient, emailUser: string, password: string) {
+    await initiator.waitForVisible(acpElements.signInButton);
+    await initiator.waitForVisible(acpElements.emailSignInInput);
+    await initiator.setValue(acpElements.emailSignInInput, emailUser);
+    await initiator.waitForVisible(acpElements.passwordSignInInput);
+    await initiator.setValue(acpElements.passwordSignInInput, password);
+    await initiator.waitForVisible(acpElements.signInButton);
+    await initiator.click(acpElements.signInButton);
+
+}
