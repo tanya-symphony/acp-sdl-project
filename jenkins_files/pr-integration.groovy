@@ -149,7 +149,7 @@ node {
                     stage("Install") {
                         sh "yarn install"
                     }
-                    
+
                     withCredentials([usernamePassword(credentialsId: "${params.POD_ADMIN_CREDS_ID}", usernameVariable: "ADMIN_USER", passwordVariable: "ADMIN_PWD"),
                                      file(credentialsId: "${testSupportPortalKeyStore}", variable: 'SUPPORT_PORTAL_KEYSTORE'),
                                      string(credentialsId: "${testSupportPortalKeyStorePassword}", variable: 'SUPPORT_PORTAL_KEYSTORE_PASSWORD')]) {
@@ -164,7 +164,7 @@ node {
                         ]) {
                             stage("Test acp-admin sdl tests") {
                                 sh """yarn run sdl-admin-test -- --verbose 2 \
-                            --run-chrome-in-docker \
+                            --docker \
                             --adminName $ADMIN_USER --adminPwd $ADMIN_PWD \
                             --log-base-dir \"${env.BUILD_URL}/artifact/\" \
                             --start-page-url $START_PAGE_URL \
