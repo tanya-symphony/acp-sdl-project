@@ -1,5 +1,5 @@
-@Library("sym-pipeline@master") _
-@Library('SFE-RTC-pipeline')
+// Source @ https://github.com/SymphonyOSF/SFE-RTC-pipeline/tree/master/vars
+@Library(["sym-pipeline@master", "SFE-RTC-pipeline"]) _
 
 import groovy.json.JsonSlurperClassic
 import com.symphony.cicd.SymphonyCICDUtils
@@ -129,10 +129,7 @@ def podEntitlements = """
 
 properties([
         parameters([
-                string(name: "POD_ADMIN_CREDS_ID", defaultValue: "qa-automation", description: "Id of jenkins credentials for pod admin username/password"),
-                string(name: "TEST_SUPPORT_PORTAL_KEYSTORE_CREDS_ID", defaultValue: "test.support.portal.keystore", description: "test.support.portal.keystore"),
-                string(name: "TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD_CREDS_ID", defaultValue: "test.support.portal.keystore.password", description: "test.support.portal.keystore"),
-                string(name: "TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS", defaultValue: "support-alias", description: "test.support.portal.keystore")
+                string(name: "POD_ADMIN_CREDS_ID", defaultValue: "qa-automation", description: "Id of jenkins credentials for pod admin username/password")
         ])
 ])
 
@@ -170,9 +167,9 @@ node {
                             --log-base-dir \"${env.BUILD_URL}/artifact/\" \
                             --start-page-url $START_PAGE_URL \
                             --backend-url $BACKEND_URL/admin-console \
-                            --support-portal-keystore-path \"$TEST_SUPPORT_PORTAL_KEYSTORE\" \
-                            --support-portal-keystore-password \"$TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD\" \
-                            --support-portal-keystore-alias \"$TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS\" \
+                            --support-portal-keystore-path ${SUPPORT_PORTAL_KEYSTORE} \
+                            --support-portal-keystore-password ${SUPPORT_PORTAL_KEYSTORE_PASSWORD} \
+                            --support-portal-keystore-alias ${testSupportPortalKeyStoreAlias}
                         """
                         }
                     }
