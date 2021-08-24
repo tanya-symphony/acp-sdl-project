@@ -163,11 +163,11 @@ node {
                             --run-chrome-in-docker \
                             --adminName $ADMIN_USER --adminPwd $ADMIN_PWD \
                             --log-base-dir \"${env.BUILD_URL}/artifact/\" \
-                            --start-page-url ${START_PAGE_URL} \
-                            --backend-url ${BACKEND_URL}/admin-console \
-                            --support-portal-keystore-path \"${TEST_SUPPORT_PORTAL_KEYSTORE}\" \
-                            --support-portal-keystore-password \"${TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD}\" \
-                            --support-portal-keystore-alias \"${TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS}\" \
+                            --start-page-url $START_PAGE_URL \
+                            --backend-url $BACKEND_URL/admin-console \
+                            --support-portal-keystore-path \"$TEST_SUPPORT_PORTAL_KEYSTORE\" \
+                            --support-portal-keystore-password \"$TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD\" \
+                            --support-portal-keystore-alias \"$TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS\" \
                         """
                         }
                     }
