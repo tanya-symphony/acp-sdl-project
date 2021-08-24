@@ -32,11 +32,19 @@ export async function goToDLPage(initiator: DesktopClient) {
 }
 
 /**
- * Go to DL page
+ * Go to Create Account page
  */
 export async function goToCreateAnAccountPage(initiator: DesktopClient) {
     await initiator.waitForVisible(acpElements.createUserMenu);
     await initiator.click(acpElements.createUserMenu);
+}
+
+/**
+ * Go to Browse Account page
+ */
+export async function goToBrowseAccountsPage(initiator: DesktopClient) {
+    await initiator.waitForVisible(acpElements.browseAccountsMenu);
+    await initiator.click(acpElements.browseAccountsMenu);
 }
 
 /**

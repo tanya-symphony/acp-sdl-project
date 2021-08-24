@@ -7,6 +7,8 @@ export const leftNavPanel: string = "#left-nav";
 // Navigation
 export const distributionListsMenu: string =  ".distributionLists";
 export const createUserMenu: string = ".createUser";
+export const browseAccountsMenu: string = ".browseUsers.active";
+//
 // Login / Log Out
 export const accountNameLabel: string = ".account-name";
 export const logOutLink: string = ".logout";

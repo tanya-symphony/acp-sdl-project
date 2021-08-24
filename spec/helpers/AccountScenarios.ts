@@ -57,8 +57,62 @@ export async function setRoleDuringAccountCreation(initiator: DesktopClient, rol
     }
 }
 
+/**
+ * Finish account creation
+ * @param initiator
+ */
 export async function finishAccountCreation(initiator: DesktopClient) {
     await initiator.waitForVisible(caElements.createAccountButton);
     await initiator.click(caElements.createAccountButton);
     await initiator.waitForVisible(caElements.userCreatedMessageLabel);
+}
+
+/**
+ * Check Browse accounts page
+ */
+export async function checkBrowseAccountsPage(initiator: DesktopClient) {
+    await initiator.waitForVisibleWithText(caElements.headerGenericPage, "Browse Accounts");
+    await initiator.waitForVisible(caElements.filtersContainer);
+}
+
+/**
+ * Check Browse accounts page
+ */
+export async function openAccount(initiator: DesktopClient, testUserName: string) {
+    await initiator.waitForVisible(caElements.searchInput);
+    await initiator.setValue(caElements.searchInput, testUserName);
+    await initiator.waitForVisible("//*[@class='tt-dataset-user-search']" +
+        "//*[@class='user-search-result__meta--pretty-name']/*/strong[.='" + testUserName + "']");
+    await initiator.click("//*[@class='tt-dataset-user-search']" +
+        "//*[@class='user-search-result__meta--pretty-name']/*/strong[.='" + testUserName + "']");
+    await initiator.waitForVisible(caElements.changeStatusButton);
+}
+
+/**
+ * Save changes for account update
+ * @param initiator
+ */
+export async function finishAccountUpdate(initiator: DesktopClient) {
+    await initiator.waitForVisible(caElements.updateProfileButton);
+    await initiator.click(caElements.updateProfileButton);
+    await initiator.waitForVisible(caElements.userUpdatedMessageLabel);
+}
+
+/**
+ * Change user's password
+ * @param initiator
+ * @param password
+ */
+export async function changePasswordDuringAccountUpdate(initiator: DesktopClient, password: string) {
+    await initiator.waitForVisible(caElements.resetPasswordButton);
+    await initiator.moveMouseTo(caElements.resetPasswordButton);
+    await initiator.waitForVisible(caElements.assignNewPasswordMenuItem);
+    await initiator.click(caElements.assignNewPasswordMenuItem);
+    await initiator.waitForVisible(caElements.modalContainer);
+    await initiator.waitForVisible(caElements.newAssignedPasswordInput);
+    await initiator.setValue(caElements.newAssignedPasswordInput, password);
+    await initiator.waitForVisible(caElements.submitModalButton);
+    await initiator.click(caElements.submitModalButton);
+    await initiator.waitForVisible(caElements.notificationPasswordChangeLabel);
+    await initiator.click(caElements.submitModalButton);
 }
