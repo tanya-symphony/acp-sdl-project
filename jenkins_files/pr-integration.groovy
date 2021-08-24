@@ -146,7 +146,7 @@ node {
             checkout scm
             withNvm("v12.18.3", "npmrcFile") {
                 stage("Install") {
-                    sh "npm install"
+                    sh "yarn install"
                 }
                 withCredentials([ usernamePassword(credentialsId: "${params.POD_ADMIN_CREDS_ID}", usernameVariable: "ADMIN_USER", passwordVariable: "ADMIN_PWD"),
                                   file(credentialsId: "${testSupportPortalKeyStore}", variable: 'SUPPORT_PORTAL_KEYSTORE'),
@@ -161,7 +161,7 @@ node {
                             "TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS=${testSupportPortalKeyStoreAlias}"
                     ]) {
                         stage("Test acp-admin sdl tests") {
-                            sh """npm run sdl-admin-test -- --verbose 2 \
+                            sh """yarn run sdl-admin-test -- --verbose 2 \
                             --run-chrome-in-docker \
                             --adminName $ADMIN_USER --adminPwd $ADMIN_PWD \
                             --log-base-dir \"${env.BUILD_URL}/artifact/\" \
