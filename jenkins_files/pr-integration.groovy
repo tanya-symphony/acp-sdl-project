@@ -163,8 +163,8 @@ node {
                                 "TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS=${testSupportPortalKeyStoreAlias}"
                         ]) {
                             stage("Test acp-admin sdl tests") {
-                                sh """yarn run sdl-admin-test -- --verbose 2 \
-                            --docker \
+                                sh """yarn run sdl-admin-test  --verbose 2 \
+                             --docker \
                             --adminName $ADMIN_USER --adminPwd $ADMIN_PWD \
                             --log-base-dir \"${env.BUILD_URL}/artifact/\" \
                             --start-page-url $START_PAGE_URL \
