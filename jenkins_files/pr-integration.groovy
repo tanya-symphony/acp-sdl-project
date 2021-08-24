@@ -164,14 +164,14 @@ node {
                         ]) {
                             stage("Test acp-admin sdl tests") {
                                 sh """yarn run sdl-admin-test  --verbose 2 \
-                             --docker \
-                            --adminName $ADMIN_USER --adminPwd $ADMIN_PWD \
-                            --log-base-dir \"${env.BUILD_URL}/artifact/\" \
-                            --start-page-url $START_PAGE_URL \
-                            --backend-url $BACKEND_URL/admin-console \
-                            --support-portal-keystore-path ${SUPPORT_PORTAL_KEYSTORE} \
-                            --support-portal-keystore-password ${SUPPORT_PORTAL_KEYSTORE_PASSWORD} \
-                            --support-portal-keystore-alias ${testSupportPortalKeyStoreAlias}
+                                    --docker \
+                                    --adminName $ADMIN_USER --adminPwd $ADMIN_PWD \
+                                    --log-base-dir \"${env.BUILD_URL}/artifact/\" \
+                                    --start-page-url $START_PAGE_URL \
+                                    --backend-url $BACKEND_URL/admin-console \
+                                    --support-portal-keystore-path ${SUPPORT_PORTAL_KEYSTORE} \
+                                    --support-portal-keystore-password ${SUPPORT_PORTAL_KEYSTORE_PASSWORD} \
+                                    --support-portal-keystore-alias ${testSupportPortalKeyStoreAlias}
                         """
                             }
                         }
