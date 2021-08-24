@@ -149,21 +149,24 @@ node {
                     stage("Install") {
                         sh "yarn install"
                     }
-                }
-                withCredentials([ usernamePassword(credentialsId: "${params.POD_ADMIN_CREDS_ID}", usernameVariable: "ADMIN_USER", passwordVariable: "ADMIN_PWD"),
-                                  file(credentialsId: "${testSupportPortalKeyStore}", variable: 'SUPPORT_PORTAL_KEYSTORE'),
-                                  string(credentialsId: "${testSupportPortalKeyStorePassword}", variable: 'SUPPORT_PORTAL_KEYSTORE_PASSWORD')]) {
-                    withEnv([
-                            "BACKEND_URL=${httpsPrefix}${pod1Name}",
-                            "START_PAGE_URL=${httpsPrefix}${pod1Name}${params.START_PAGE_URL}",
-                            "ADMIN_USER=${adminUser}",
-                            "ADMIN_PWD=${adminPassword}",
-                            "TEST_SUPPORT_PORTAL_KEYSTORE=${testSupportPortalKeyStore}",
-                            "TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD=${testSupportPortalKeyStorePassword}",
-                            "TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS=${testSupportPortalKeyStoreAlias}"
-                    ]) {
-                        stage("Test acp-admin sdl tests") {
-                            sh """yarn run sdl-admin-test -- --verbose 2 \
+                    stage("Build") {
+                        sh "yarn run build"
+                    }
+
+                    withCredentials([usernamePassword(credentialsId: "${params.POD_ADMIN_CREDS_ID}", usernameVariable: "ADMIN_USER", passwordVariable: "ADMIN_PWD"),
+                                     file(credentialsId: "${testSupportPortalKeyStore}", variable: 'SUPPORT_PORTAL_KEYSTORE'),
+                                     string(credentialsId: "${testSupportPortalKeyStorePassword}", variable: 'SUPPORT_PORTAL_KEYSTORE_PASSWORD')]) {
+                        withEnv([
+                                "BACKEND_URL=${httpsPrefix}${pod1Name}",
+                                "START_PAGE_URL=${httpsPrefix}${pod1Name}${params.START_PAGE_URL}",
+                                "ADMIN_USER=${adminUser}",
+                                "ADMIN_PWD=${adminPassword}",
+                                "TEST_SUPPORT_PORTAL_KEYSTORE=${testSupportPortalKeyStore}",
+                                "TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD=${testSupportPortalKeyStorePassword}",
+                                "TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS=${testSupportPortalKeyStoreAlias}"
+                        ]) {
+                            stage("Test acp-admin sdl tests") {
+                                sh """yarn run sdl-admin-test -- --verbose 2 \
                             --run-chrome-in-docker \
                             --adminName $ADMIN_USER --adminPwd $ADMIN_PWD \
                             --log-base-dir \"${env.BUILD_URL}/artifact/\" \
@@ -173,6 +176,7 @@ node {
                             --support-portal-keystore-password ${SUPPORT_PORTAL_KEYSTORE_PASSWORD} \
                             --support-portal-keystore-alias ${testSupportPortalKeyStoreAlias}
                         """
+                            }
                         }
                     }
                 }
