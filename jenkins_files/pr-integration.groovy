@@ -149,10 +149,7 @@ node {
                     stage("Install") {
                         sh "yarn install"
                     }
-                    stage("Build") {
-                        sh "yarn run build"
-                    }
-
+                    
                     withCredentials([usernamePassword(credentialsId: "${params.POD_ADMIN_CREDS_ID}", usernameVariable: "ADMIN_USER", passwordVariable: "ADMIN_PWD"),
                                      file(credentialsId: "${testSupportPortalKeyStore}", variable: 'SUPPORT_PORTAL_KEYSTORE'),
                                      string(credentialsId: "${testSupportPortalKeyStorePassword}", variable: 'SUPPORT_PORTAL_KEYSTORE_PASSWORD')]) {
