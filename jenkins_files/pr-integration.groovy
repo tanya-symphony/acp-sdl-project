@@ -129,7 +129,7 @@ def podEntitlements = """
 
 properties([
         parameters([
-                string(name: "POD_ADMIN_CREDS_ID", defaultValue: "st2admin", description: "Id of jenkins credentials for pod admin username/password")
+                string(name: "POD_ADMIN_CREDS_ID", defaultValue: "qa-automation", description: "Id of jenkins credentials for pod admin username/password")
         ])
 ])
 
