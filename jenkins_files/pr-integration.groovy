@@ -127,6 +127,13 @@ def podEntitlements = """
         scopeExternal: true
 """
 
+properties([
+        parameters([
+                string(name: "POD_ADMIN_CREDS_ID", defaultValue: "st2admin", description: "Id of jenkins credentials for pod admin username/password")
+        ])
+])
+
+
 abortPreviousRunningBuilds()
 
 node {
@@ -134,7 +141,7 @@ node {
     def pod1Name = params.TEST_EPOD_1
     def testSupportPortalKeyStore = params.TEST_SUPPORT_PORTAL_KEYSTORE_CREDS_ID ?: "test.support.portal.keystore"
     def testSupportPortalKeyStorePassword = params.TEST_SUPPORT_PORTAL_KEYSTORE_PASSWORD_CREDS_ID ?: "test.support.portal.keystore.password"
-    def testSupportPortalKeyStoreAlias = params.TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS ?: "support-alias"
+    def testSupportPortalKeyStoreAlias = params.TEST_SUPPORT_PORTAL_KEYSTORE_ALIAS ?: "support-alias-dev"
         cleanWs()
         try {
             checkout scm
@@ -142,7 +149,8 @@ node {
                 stage("Install") {
                     sh "npm install"
                 }
-                withCredentials([string(credentialsId: 'bff_keystore', variable: 'KEYSTORE')]) {
+                withCredentials([
+                        usernamePassword(credentialsId: "${params.POD_ADMIN_CREDS_ID}", usernameVariable: "ADMIN_USER", passwordVariable: "ADMIN_PWD"),
                     withEnv([
                             "BACKEND_URL=${httpsPrefix}${pod1Name}",
                             "START_PAGE_URL=${httpsPrefix}${pod1Name}${params.START_PAGE_URL}",
