@@ -135,7 +135,7 @@ properties([
 
 abortPreviousRunningBuilds()
 
-node {
+node ("fe-integration") {
     def httpsPrefix = "https://"
     def pod1Name = params.TEST_EPOD_1
     def testSupportPortalKeyStore = params.TEST_SUPPORT_PORTAL_KEYSTORE_CREDS_ID ?: "test.support.portal.keystore"
@@ -185,6 +185,9 @@ node {
                     archiveArtifacts artifacts: "logs/**/*", allowEmptyArchive: true, fingerprint: true
                     junit testResults: "test-results/**/*.xml", allowEmptyResults: true
                 } finally {
+                    if (sh(returnStdout: true, script: "docker ps -a -q")) {
+                        sh 'docker rm $(docker stop $(docker ps -a -q))'
+                    }
                     cleanWs()
                 }
             }
