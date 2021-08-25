@@ -127,12 +127,6 @@ def podEntitlements = """
         scopeExternal: true
 """
 
-properties([
-        parameters([
-                string(name: "POD_ADMIN_CREDS_ID", defaultValue: "qa-automation", description: "Id of jenkins credentials for pod admin username/password")
-        ])
-])
-
 abortPreviousRunningBuilds()
 
 node ("fe-integration") {
