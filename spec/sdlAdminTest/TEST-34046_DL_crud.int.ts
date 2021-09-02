@@ -239,6 +239,6 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         // Delete DL
         await DistributionListScenarios.deleteDL(testClientA);
         await testClientA.waitForNotVisible(".distribution-lists-modal");
-        await testClientA.waitForVisible("//*[contains(@class,'list-name-box-with-tag')][.='" + sdlNameUpdate + "']");
+        await testClientA.waitForNotVisible("//*[contains(@class,'list-name-box-with-tag')][.='" + sdlNameUpdate + "']");
     });
 });
