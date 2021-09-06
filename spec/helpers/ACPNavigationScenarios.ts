@@ -40,6 +40,14 @@ export async function goToCreateAnAccountPage(initiator: DesktopClient) {
 }
 
 /**
+ * Go to Info Barriers page
+ */
+export async function goToInfoBarriersPage(initiator: DesktopClient) {
+    await initiator.waitForVisible(acpElements.infoBarriersMenu);
+    await initiator.click(acpElements.infoBarriersMenu);
+}
+
+/**
  * Go to Browse Account page
  */
 export async function goToBrowseAccountsPage(initiator: DesktopClient) {

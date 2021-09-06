@@ -100,7 +100,7 @@ export async function checkDataStepCreateDL(initiator: DesktopClient, sdlName: s
  * Add member to SDL
  */
 export async function selectMemberStepCreateDL(initiator: DesktopClient, testUser: TestUser) {
-    await initiator.waitForNotVisible("//*[@class='-loading -active']/*[.='Loading...']");
+    await initiator.waitForNotVisible(dlElements.loaderMemberList);
     await initiator.waitForVisible(`//*[./*/*/label[@for='user ${testUser.userId}']]/*[.='${testUser.displayname}']`);
     await initiator.waitForVisible("//label[@for='user " + testUser.userId + "']");
     await initiator.click("//label[@for='user " + testUser.userId + "']");
