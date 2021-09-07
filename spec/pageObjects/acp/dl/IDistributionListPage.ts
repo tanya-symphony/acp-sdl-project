@@ -11,4 +11,6 @@ export const searchBarInputMemberList: string = "#members-search";
 export const resetSearchButtonMemberList: string = "//*[@class='members-search']/*[@class='reset-input-icon']";
 export const loaderMemberList: string = "//*[@class='-loading -active']/*[.='Loading...']";
 export const saveButtonMemberList: string = "//*[contains(@class,'update-list-button')][.='Save the list']";
+// Messages
 export const warningMessageMemberList: string = ".warning-text.warning-text-block.info-text";
+export const errorMessageMemberList: string = ".ds-feedback-type-error";

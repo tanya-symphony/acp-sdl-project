@@ -42,7 +42,8 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         [testUser01, testUser02] = await testClientHelper.setupTestUsers(["FirstGroup", "SecondGroup"],
             { entitlements: userEntitlements } );
         [testClientA] = await testClientHelper.setupDesktopClients(["Ib-test"],
-            {user: { roles: ["INDIVIDUAL", "SUPER_ADMINISTRATOR", "L1_SUPPORT", "SUPER_COMPLIANCE_OFFICER"]}});    });
+            {user: { roles: ["INDIVIDUAL", "DISTRIBUTION_LIST_MANAGER", "SUPER_ADMINISTRATOR", "L1_SUPPORT", "SUPER_COMPLIANCE_OFFICER"]}});
+    });
 
     beforeEach(async () => {
         const startPageQuery = `?showHotSpots=0`;
@@ -52,7 +53,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await ACPNavigationScenarios.openACPfromClient1_5(testClientA);
     });
 
-    it("cannot add IB blocked users to new SDL in ACP", async () => {
+    it("cannot add IB blocked users to new external SDL in ACP", async () => {
         // Admin Session start
         await ACPNavigationScenarios.adminSessionStart(testClientA);
         // Distribution list
@@ -76,9 +77,10 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await ACPNavigationScenarios.goToDLPage(testClientA);
         // Check DL page
         await DistributionListScenarios.checkDLPage(testClientA);
-        // Open Modal for DL update
-        await DistributionListScenarios.openModalForDLEdition(testClientA, sdlName);
-        // Enter data
+        await DistributionListScenarios.openModalForDLCreation(testClientA);
+        await DistributionListScenarios.fillDataStepCreateDL(testClientA,
+            sdlName, att1, att2, att3, att4, externalType);
+        // Checks
         await DistributionListScenarios.checkDataStepCreateDL(testClientA,
             sdlName, att1, att2, att3, att4, externalType);
         // Go to Member list
@@ -97,5 +99,25 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await testClientA.waitForVisible(dlElements.saveButtonMemberList);
         await testClientA.click(dlElements.saveButtonMemberList);
         // Catch error message
+        await testClientA.waitForVisible(dlElements.errorMessageMemberList);
+        await testClientA.waitForVisibleWithText(dlElements.errorMessageMemberList,
+            "An information barrier violation was found between the group members");
+        await testClientA.waitForVisible(dlElements.distributionListsModal);
+        // Unselect one user
+        await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser02);
+        value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
+        await testClientA.assert(() => expect(value).toContain("is-selected"));
+        await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "1");
+        await testClientA.waitForVisible(dlElements.saveButtonMemberList);
+        await testClientA.click(dlElements.saveButtonMemberList);
+        await testClientA.waitForNotVisible(dlElements.distributionListsModal);
+        await testClientA.waitForVisible("//*[contains(@class,'list-name-box-with-tag')][.='" + sdlName + "']");
+        // Delete current DL
+        await DistributionListScenarios.openModalForDLEdition(testClientA, sdlName);
+        // Delete DL
+        await DistributionListScenarios.deleteDL(testClientA);
+        await testClientA.waitForNotVisible(dlElements.distributionListsModal);
+        await testClientA.waitForNotVisible(
+            "//*[contains(@class,'list-name-box-with-tag')][.='" + sdlName + "']");
     });
 });
