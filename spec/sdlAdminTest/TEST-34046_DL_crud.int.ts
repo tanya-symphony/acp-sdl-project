@@ -7,6 +7,7 @@ import {PmpUser} from "@symphony/rtc-greenkeeper-lib/dist/TestClientFactory";
 import expect from "expect";
 import * as ACPNavigationScenarios from "../helpers/ACPNavigationScenarios";
 import * as DistributionListScenarios from "../helpers/DistributionListScenarios";
+import * as dlElements from "../pageObjects/acp/dl/IDistributionListPage";
 
 describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: TestClientFactory) => {
     let testClientA: DesktopClient;
@@ -67,7 +68,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         // External / Internal
         await DistributionListScenarios.checkModalForDLCreation(testClientA);
         // Check errors
-        await testClientA.click("//button[contains(@class, 'add-members-button')]");
+        await testClientA.click(dlElements.addMembersButtonModal);
         await testClientA.waitForVisibleWithText("//*[@class='settings-management']/*/*[@class='warning-text']", "You must provide a non-empty name");
         await testClientA.waitForVisibleWithText("//*[@class='settings-management']/*/*[@class='warning-text']", "You must select at least one attribute");
         // Enter data
@@ -77,9 +78,9 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await DistributionListScenarios.checkDataStepCreateDL(testClientA, sdlName, att1, att2, att3, att4,
             externalType);
         // Go to Member list
-        await testClientA.click("//button[contains(@class, 'add-members-button')]");
-        await testClientA.waitForVisible("#members-search");
-        await testClientA.waitForNotVisibleWithText(".warning-text.warning-text-block.info-text", "Only users that can chat in private external rooms will be shown in search results here.");
+        await testClientA.click(dlElements.addMembersButtonModal);
+        await testClientA.waitForVisible(dlElements.searchBarInputMemberList);
+        await testClientA.waitForNotVisibleWithText(dlElements.warningMessageMemberList, "Only users that can chat in private external rooms will be shown in search results here.");
         await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser01);
         await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser02);
         await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser03);
@@ -93,8 +94,8 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser04.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
         await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "4");
-        await testClientA.waitForVisible("//*[contains(@class,'update-list-button')][.='Save the list']");
-        await testClientA.click("//*[contains(@class,'update-list-button')][.='Save the list']");
+        await testClientA.waitForVisible(dlElements.saveButtonMemberList);
+        await testClientA.click(dlElements.saveButtonMemberList);
         // Check DL in whole list
         await DistributionListScenarios.checkDLinList(testClientA, sdlName, att1, att2, att3, att4,
             externalType, 4);
@@ -114,11 +115,11 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await DistributionListScenarios.checkDataStepCreateDL(testClientA, sdlNameUpdate, att1Update,
             att2Update, att3Update, att4Update, externalType);
         // Go to Member list
-        await testClientA.click("//button[contains(@class, 'add-members-button')]");
-        await testClientA.waitForVisible("#members-search");
-        await testClientA.waitForNotVisibleWithText(".warning-text.warning-text-block.info-text", "Only users that can chat in private external rooms will be shown in search results here.");
-        await testClientA.waitForVisible("//*[contains(@class,'update-list-button')][.='Save the list']");
-        await testClientA.click("//*[contains(@class,'update-list-button')][.='Save the list']");
+        await testClientA.click(dlElements.addMembersButtonModal);
+        await testClientA.waitForVisible(dlElements.searchBarInputMemberList);
+        await testClientA.waitForNotVisibleWithText(dlElements.warningMessageMemberList, "Only users that can chat in private external rooms will be shown in search results here.");
+        await testClientA.waitForVisible(dlElements.saveButtonMemberList);
+        await testClientA.click(dlElements.saveButtonMemberList);
         // Check DL in whole list
         // tslint:disable-next-line:max-line-length
         await DistributionListScenarios.checkDLinList(testClientA, sdlNameUpdate, att1Update, att2Update, att3Update, att4Update,
@@ -147,11 +148,11 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await testClientA.waitForVisible("//*[@class='list-display-name-box']" +
             "/*[@class='list-attribute-tag'][contains(text(), '" + att4Update + "')]");
         // Go to Member list
-        await testClientA.click("//button[contains(@class, 'add-members-button')]");
-        await testClientA.waitForVisible("#members-search");
-        await testClientA.waitForNotVisibleWithText(".warning-text.warning-text-block.info-text", "Only users that can chat in private external rooms will be shown in search results here.");
-        await testClientA.waitForVisible("//*[contains(@class,'update-list-button')][.='Save the list']");
-        await testClientA.click("//*[contains(@class,'update-list-button')][.='Save the list']");
+        await testClientA.click(dlElements.addMembersButtonModal);
+        await testClientA.waitForVisible(dlElements.searchBarInputMemberList);
+        await testClientA.waitForNotVisibleWithText(dlElements.warningMessageMemberList, "Only users that can chat in private external rooms will be shown in search results here.");
+        await testClientA.waitForVisible(dlElements.saveButtonMemberList);
+        await testClientA.click(dlElements.saveButtonMemberList);
         // Check DL in whole list
         await testClientA.waitForNotVisible("//div[@role='row'][./*[.='" + sdlNameUpdate + "']]//*[@class='list-attribute-tag'][.='" + att1Update + "']");
         await testClientA.waitForNotVisible("//div[@role='row'][./*[.='" + sdlNameUpdate + "']]//*[@class='list-attribute-tag'][.='" + att2Update + "']");
@@ -167,16 +168,16 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         // Open Modal for DL update
         await DistributionListScenarios.openModalForDLEdition(testClientA, sdlNameUpdate);
         // Go to Member list
-        await testClientA.click("//button[contains(@class, 'add-members-button')]");
-        await testClientA.waitForVisible("#members-search");
-        await testClientA.waitForNotVisibleWithText(".warning-text.warning-text-block.info-text", "Only users that can chat in private external rooms will be shown in search results here.");
+        await testClientA.click(dlElements.addMembersButtonModal);
+        await testClientA.waitForVisible(dlElements.searchBarInputMemberList);
+        await testClientA.waitForNotVisibleWithText(dlElements.warningMessageMemberList, "Only users that can chat in private external rooms will be shown in search results here.");
         // Search and select user
         await testClientA.sleep(500);
-        await testClientA.setValue("#members-search", testUser05.displayname);
-        await testClientA.waitForVisible("//*[@class='members-search']/*[@class='reset-input-icon']");
+        await testClientA.setValue(dlElements.searchBarInputMemberList, testUser05.displayname);
+        await testClientA.waitForVisible(dlElements.resetSearchButtonMemberList);
         await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "4");
         await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser05);
-        await testClientA.click("//*[@class='members-search']/*[@class='reset-input-icon']");
+        await testClientA.click(dlElements.resetSearchButtonMemberList);
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser05.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
@@ -188,8 +189,8 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser04.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
         await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "5");
-        await testClientA.waitForVisible("//*[contains(@class,'update-list-button')][.='Save the list']");
-        await testClientA.click("//*[contains(@class,'update-list-button')][.='Save the list']");
+        await testClientA.waitForVisible(dlElements.saveButtonMemberList);
+        await testClientA.click(dlElements.saveButtonMemberList);
         // Check DL in whole list
         await DistributionListScenarios.checkDLinList(testClientA, sdlNameUpdate, null, null, att3Update, att4Update,
             externalType, 5);
@@ -203,16 +204,16 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         // Open Modal for DL update
         await DistributionListScenarios.openModalForDLEdition(testClientA, sdlNameUpdate);
         // Go to Member list
-        await testClientA.click("//button[contains(@class, 'add-members-button')]");
-        await testClientA.waitForVisible("#members-search");
-        await testClientA.waitForNotVisibleWithText(".warning-text.warning-text-block.info-text", "Only users that can chat in private external rooms will be shown in search results here.");
+        await testClientA.click(dlElements.addMembersButtonModal);
+        await testClientA.waitForVisible(dlElements.searchBarInputMemberList);
+        await testClientA.waitForNotVisibleWithText(dlElements.warningMessageMemberList, "Only users that can chat in private external rooms will be shown in search results here.");
         // Search and select user
         await testClientA.sleep(500);
-        await testClientA.setValue("#members-search", testUser05.displayname);
-        await testClientA.waitForVisible("//*[@class='members-search']/*[@class='reset-input-icon']");
+        await testClientA.setValue(dlElements.searchBarInputMemberList, testUser05.displayname);
+        await testClientA.waitForVisible(dlElements.resetSearchButtonMemberList);
         await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "5");
         await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser05);
-        await testClientA.click("//*[@class='members-search']/*[@class='reset-input-icon']");
+        await testClientA.click(dlElements.resetSearchButtonMemberList);
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser02.userId + "']]", "class");
@@ -222,8 +223,8 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser04.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
         await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "4");
-        await testClientA.waitForVisible("//*[contains(@class,'update-list-button')][.='Save the list']");
-        await testClientA.click("//*[contains(@class,'update-list-button')][.='Save the list']");
+        await testClientA.waitForVisible(dlElements.saveButtonMemberList);
+        await testClientA.click(dlElements.saveButtonMemberList);
         // Check DL in whole list
         await DistributionListScenarios.checkDLinList(testClientA, sdlNameUpdate, null, null, att3Update, att4Update,
             externalType, 4);
@@ -238,7 +239,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await DistributionListScenarios.openModalForDLEdition(testClientA, sdlNameUpdate);
         // Delete DL
         await DistributionListScenarios.deleteDL(testClientA);
-        await testClientA.waitForNotVisible(".distribution-lists-modal");
+        await testClientA.waitForNotVisible(dlElements.distributionListsModal);
         await testClientA.waitForNotVisible(
             "//*[contains(@class,'list-name-box-with-tag')][.='" + sdlNameUpdate + "']");
     });
