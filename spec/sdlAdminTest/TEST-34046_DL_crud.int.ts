@@ -178,6 +178,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "4");
         await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser05);
         await testClientA.click(dlElements.resetSearchButtonMemberList);
+        await testClientA.waitForNotVisible(dlElements.loaderMemberList);
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser05.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
