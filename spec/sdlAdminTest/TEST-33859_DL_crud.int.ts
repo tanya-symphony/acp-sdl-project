@@ -4,6 +4,7 @@ import {
     TestClientFactory, TestUser,
 } from "@symphony/rtc-greenkeeper-lib";
 import {PmpUser} from "@symphony/rtc-greenkeeper-lib/dist/TestClientFactory";
+// @ts-ignore
 import expect from "expect";
 import * as ACPNavigationScenarios from "../helpers/ACPNavigationScenarios";
 import * as DistributionListScenarios from "../helpers/DistributionListScenarios";
@@ -215,7 +216,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await testClientA.waitForVisible(dlElements.resetSearchButtonMemberList);
         await testClientA.click(dlElements.resetSearchButtonMemberList);
         await testClientA.waitForNotVisible(dlElements.loaderMemberList);
-        await testClientA.sleep(300);
+        await testClientA.sleep(499);
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser02.userId + "']]", "class");

@@ -172,7 +172,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await testClientA.waitForVisible(dlElements.searchBarInputMemberList);
         await testClientA.waitForNotVisibleWithText(dlElements.warningMessageMemberList, "Only users that can chat in private external rooms will be shown in search results here.");
         // Search and select user
-        await testClientA.sleep(500);
+        await testClientA.sleep(499);
         await testClientA.setValue(dlElements.searchBarInputMemberList, testUser05.displayname);
         await testClientA.waitForVisible(dlElements.resetSearchButtonMemberList);
         await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "4");
@@ -209,7 +209,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await testClientA.waitForVisible(dlElements.searchBarInputMemberList);
         await testClientA.waitForNotVisibleWithText(dlElements.warningMessageMemberList, "Only users that can chat in private external rooms will be shown in search results here.");
         // Search and select user
-        await testClientA.sleep(500);
+        await testClientA.sleep(499);
         await testClientA.setValue(dlElements.searchBarInputMemberList, testUser05.displayname);
         await testClientA.waitForVisible(dlElements.resetSearchButtonMemberList);
         await testClientA.waitForNotVisible(dlElements.loaderMemberList);
@@ -217,7 +217,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser05);
         await testClientA.click(dlElements.resetSearchButtonMemberList);
         await testClientA.waitForNotVisible(dlElements.loaderMemberList);
-        await testClientA.sleep(400);
+        await testClientA.sleep(499);
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser02.userId + "']]", "class");
