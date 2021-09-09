@@ -8,7 +8,7 @@ import * as dlElements from "../pageObjects/acp/dl/IDistributionListPage";
  * Check DL page
  */
 export async function checkDLPage(initiator: DesktopClient) {
-    await initiator.waitForVisibleWithText(dlElements.headerDLList, "Distribution Lists");
+    await initiator.waitForVisibleWithText(dlElements.headerDLList, "Groups (Distribution Lists)");
     await initiator.waitForVisible(dlElements.createDlButton);
     await initiator.waitForVisible("//*[@data-test-id='p6kl7M869p']/a[.='Audit Trail']");
 }
@@ -19,7 +19,7 @@ export async function checkDLPage(initiator: DesktopClient) {
 export async function openModalForDLCreation(initiator: DesktopClient) {
     await initiator.click(dlElements.createDlButton);
     await initiator.waitForVisible(dlElements.distributionListsModal);
-    await initiator.waitForVisible("//input[contains(@class, 'list-name-input')]");
+    await initiator.waitForVisible(dlElements.listNameInput);
     await initiator.waitForVisible("//*[contains(@class, 'Select-multi-value-wrapper')][contains(@id,'react-select')]");
 }
 
@@ -29,8 +29,8 @@ export async function openModalForDLCreation(initiator: DesktopClient) {
 export async function checkModalForDLCreation(initiator: DesktopClient) {
     await initiator.waitForExist("//*[@name='isExternal']");
     await initiator.waitForVisible("//*[contains(@class, 'list-display-name-box')]");
-    await initiator.waitForVisible("//button[contains(@class, 'add-members-button')]");
-    await initiator.waitForVisible("//button[contains(@class, 'cancel-button')]");
+    await initiator.waitForVisible(dlElements.addMembersButtonModal);
+    await initiator.waitForVisible(dlElements.cancelButtonModal);
 }
 
 /**
@@ -38,7 +38,7 @@ export async function checkModalForDLCreation(initiator: DesktopClient) {
  */
 export async function fillDataStepCreateDL(initiator: DesktopClient, sdlName: string,
                                            att1: string, att2: string, att3: string, att4: string, external: boolean) {
-    await initiator.setValue("//input[contains(@class, 'list-name-input')]", sdlName);
+    await initiator.setValue(dlElements.listNameInput, sdlName);
     if (external && external !== null) {
     const value = await initiator.getElementAttribute("//*[@name='isExternal']", "value");
     await initiator.assert(() => expect(value).toBe("on"));
@@ -75,7 +75,7 @@ export async function fillDataStepCreateDL(initiator: DesktopClient, sdlName: st
  */
 export async function checkDataStepCreateDL(initiator: DesktopClient, sdlName: string,
                                             att1: string, att2: string, att3: string, att4: string, external: boolean) {
-    await initiator.waitForVisibleWithValue("//input[contains(@class, 'list-name-input')]", sdlName);
+    await initiator.waitForVisibleWithValue(dlElements.listNameInput, sdlName);
     await initiator.waitForVisible("//*[@class='Select-value-label'][contains(@id,'-value-0')]/span[.='" + att1 + "']");
     await initiator.waitForVisible("//*[@class='Select-value-label'][contains(@id,'-value-1')]/span[.='" + att2 + "']");
     await initiator.waitForVisible("//*[@class='Select-value-label'][contains(@id,'-value-2')]/span[.='" + att3 + "']");
@@ -112,10 +112,10 @@ export async function selectMemberStepCreateDL(initiator: DesktopClient, testUse
 export async function openModalForDLEdition(initiator: DesktopClient, sdlName: string) {
     await initiator.waitForVisible("//*[contains(@class,'list-name-box-with-tag')][.='" + sdlName + "']");
     await initiator.moveMouseTo("//*[contains(@class,'list-name-box-with-tag')][.='" + sdlName + "']");
-    await initiator.waitForVisible("//button[@class='edit-list-btn'][.='Edit List']");
-    await initiator.click("//button[@class='edit-list-btn'][.='Edit List']");
+    await initiator.waitForVisible(dlElements.editGroupButton);
+    await initiator.click(dlElements.editGroupButton);
     await initiator.waitForVisible(dlElements.distributionListsModal);
-    await initiator.waitForVisible("//input[contains(@class, 'list-name-input')]");
+    await initiator.waitForVisible(dlElements.listNameInput);
     await initiator.waitForVisible("//*[contains(@class, 'Select-multi-value-wrapper')][contains(@id,'react-select')]");
 }
 
@@ -150,10 +150,10 @@ export async function checkDLinList(initiator: DesktopClient, sdlName: string,
  * Delete DL
  */
 export async function deleteDL(initiator: DesktopClient) {
-    await initiator.waitForVisibleWithText("//label[@for='want-to-delete']", "I want to delete this list");
-    await initiator.click("//label[@for='want-to-delete']");
-    await initiator.waitForVisibleWithText("//label[@for='acknowledge-delete']", "I acknowledge that this action cannot be undone");
-    await initiator.click("//label[@for='acknowledge-delete']");
-    await initiator.waitForVisible(".delete-list-button");
-    await initiator.click(".delete-list-button");
+    await initiator.waitForVisibleWithText(dlElements.wantToDeletButtonModal, "I want to delete this group");
+    await initiator.click(dlElements.wantToDeletButtonModal);
+    await initiator.waitForVisibleWithText(dlElements.acknowledgeDeletButtonModal, "I acknowledge that this action cannot be undone");
+    await initiator.click(dlElements.acknowledgeDeletButtonModal);
+    await initiator.waitForVisible(dlElements.deletButtonModal);
+    await initiator.click(dlElements.deletButtonModal);
 }
