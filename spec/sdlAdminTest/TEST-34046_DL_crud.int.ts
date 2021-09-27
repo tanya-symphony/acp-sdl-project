@@ -35,15 +35,23 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
     const userEntitlements = {
         isExternalRoomEnabled: true };
 
+    const userMoreInfoForTest = {
+        function: [att1],
+        instrument: [att2],
+        marketCoverage: [att3],
+        responsibility: [att4],
+    };
+
     before(async () => {
         // Allowing all errors from client since this is just an example project
         TestClientFactory.globalLogWhitelist = [
             /.*/,
         ];
         await pmpHelper.updatePodSetting("https://warpdrive-lab.dev.symphony.com/env/tetianak-pod1/sbe/support/v1/system/settings/enable-distribution-list-management", "ENABLE");
-        [testUser04] = await testClientHelper.setupTestUsers(["NoEntitlementsCanChat"]);
+        [testUser04] = await testClientHelper.setupTestUsers(["NoEntitlementsCanChat"],
+            { userMoreInfo: userMoreInfoForTest });
         [testUser01, testUser02, testUser03, testUser05] = await testClientHelper.setupTestUsers(["A", "B", "C", "AddRemoveTest"],
-            { entitlements: userEntitlements } );
+            { entitlements: userEntitlements, userMoreInfo: userMoreInfoForTest });
         [testClientA] = await testClientHelper.setupDesktopClients(["Tania"],
             {user: { roles: ["INDIVIDUAL", "DISTRIBUTION_LIST_MANAGER", "SUPER_ADMINISTRATOR", "L1_SUPPORT", "SUPER_COMPLIANCE_OFFICER"]}});
     });
@@ -72,10 +80,10 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await testClientA.waitForVisibleWithText("//*[@class='settings-management']/*/*[@class='warning-text']", "You must provide a non-empty name");
         await testClientA.waitForVisibleWithText("//*[@class='settings-management']/*/*[@class='warning-text']", "You must select at least one attribute");
         // Enter data
-        await DistributionListScenarios.fillDataStepCreateDL(testClientA, sdlName, att1, att2, att3, att4,
+        await DistributionListScenarios.fillDataStepCreateDL(testClientA, sdlName, att1, null, att3, att4,
             externalType);
         // Checks
-        await DistributionListScenarios.checkDataStepCreateDL(testClientA, sdlName, att1, att2, att3, att4,
+        await DistributionListScenarios.checkDataStepCreateDL(testClientA, sdlName, att1, null, att3, att4,
             externalType);
         // Go to Member list
         await testClientA.click(dlElements.addMembersButtonModal);
@@ -97,7 +105,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await testClientA.waitForVisible(dlElements.saveButtonMemberList);
         await testClientA.click(dlElements.saveButtonMemberList);
         // Check DL in whole list
-        await DistributionListScenarios.checkDLinList(testClientA, sdlName, att1, att2, att3, att4,
+        await DistributionListScenarios.checkDLinList(testClientA, sdlName, att1, null, att3, att4,
             externalType, 4);
     });
 

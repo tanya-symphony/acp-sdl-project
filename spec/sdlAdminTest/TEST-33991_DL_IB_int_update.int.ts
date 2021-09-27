@@ -32,6 +32,13 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
     const userEntitlements = {
         isExternalRoomEnabled: true };
 
+    const userMoreInfoForTest = {
+        function: [att1],
+        instrument: [att2],
+        marketCoverage: [att3],
+        responsibility: [att4],
+    };
+
     before(async () => {
         // Allowing all errors from client since this is just an example project
         TestClientFactory.globalLogWhitelist = [
@@ -40,7 +47,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await pmpHelper.updatePodSetting("https://warpdrive-lab.dev.symphony.com/env/tetianak-pod1/sbe/support/v1/system/settings/enable-distribution-list-management", "ENABLE");
         // Connecting to Symphony webpage
         [testUser01, testUser02] = await testClientHelper.setupTestUsers(["IB01", "IB02"],
-            { entitlements: userEntitlements } );
+            { entitlements: userEntitlements, userMoreInfo: userMoreInfoForTest });
         [testClientA] = await testClientHelper.setupDesktopClients(["Ib-test"],
             {user: { roles: ["INDIVIDUAL", "DISTRIBUTION_LIST_MANAGER", "SUPER_ADMINISTRATOR", "L1_SUPPORT", "SUPER_COMPLIANCE_OFFICER"]}});
     });
@@ -79,10 +86,10 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await DistributionListScenarios.checkDLPage(testClientA);
         await DistributionListScenarios.openModalForDLCreation(testClientA);
         await DistributionListScenarios.fillDataStepCreateDL(testClientA,
-            sdlName, att1, att2, att3, att4, externalType);
+            sdlName, att1, null, att3, att4, externalType);
         // Checks
         await DistributionListScenarios.checkDataStepCreateDL(testClientA,
-            sdlName, att1, att2, att3, att4, externalType);
+            sdlName, att1, null, att3, att4, externalType);
         // Go to Member list
         await testClientA.click(dlElements.addMembersButtonModal);
         await testClientA.waitForVisible(dlElements.searchBarInputMemberList);

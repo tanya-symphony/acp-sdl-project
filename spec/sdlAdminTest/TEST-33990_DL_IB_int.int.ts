@@ -24,9 +24,9 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
     const att3: string  = "NA";
     const att4: string  = "BAU";
     const sdlName: string = "SDL AUTO EXT " + Date.now().toString() + Math.random().toString().slice(2);
-    const groupIBName01: string = "IB-test03" + Date.now().toString();
-    const groupIBName02: string = "IB-test04" + Date.now().toString();
-    const externalType: boolean = true;
+    const groupIBName01: string = "IB-test01" + Date.now().toString();
+    const groupIBName02: string = "IB-test02" + Date.now().toString();
+    const externalType: boolean = false;
     pmpHelper = testClientHelper.getPmpUser(["SP_CAN_MODIFY_POD_CONF"]);
 
     const userEntitlements = {
@@ -60,7 +60,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await ACPNavigationScenarios.openACPfromClient1_5(testClientA);
     });
 
-    it("cannot add IB blocked users to existing external SDL in ACP", async () => {
+    it("cannot add IB blocked users to new internal SDL in ACP", async () => {
         // Admin Session start
         await ACPNavigationScenarios.adminSessionStart(testClientA);
         // Distribution list
@@ -93,30 +93,8 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         // Go to Member list
         await testClientA.click(dlElements.addMembersButtonModal);
         await testClientA.waitForVisible(dlElements.searchBarInputMemberList);
-        await testClientA.waitForVisibleWithText(dlElements.warningMessageMemberList,
-            "Only users that can chat in private external rooms will be shown in search results here.");
         await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser01);
-        // Validation
-        value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
-        await testClientA.assert(() => expect(value).toContain("is-selected"));
-        await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "1");
-        await testClientA.waitForVisible(dlElements.saveButtonMemberList);
-        await testClientA.click(dlElements.saveButtonMemberList);
-        await testClientA.waitForNotVisible(dlElements.distributionListsModal);
-        await testClientA.waitForVisible("//*[contains(@class,'list-name-box-with-tag')][.='" + sdlName + "']");
-        // Edit current list
-        await DistributionListScenarios.openModalForDLEdition(testClientA, sdlName);
-        // Go to Member list
-        await testClientA.click(dlElements.addMembersButtonModal);
-        await testClientA.waitForVisible(dlElements.searchBarInputMemberList);
-        await testClientA.waitForVisibleWithText(dlElements.warningMessageMemberList, "Only users that can chat in private external rooms will be shown in search results here.");
-        // Search and select user
-        await testClientA.waitForVisible(dlElements.searchBarInputMemberList);
-        await testClientA.setValue(dlElements.searchBarInputMemberList, testUser02.username);
         await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser02);
-        await testClientA.waitForVisible(dlElements.resetSearchButtonMemberList);
-        await testClientA.click(dlElements.resetSearchButtonMemberList);
-        await testClientA.waitForNotVisible(dlElements.loaderMemberList);
         // Validation
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
@@ -132,7 +110,6 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await testClientA.waitForVisible(dlElements.distributionListsModal);
         // Unselect one user
         await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser02);
-        await testClientA.waitForNotVisible(dlElements.loaderMemberList);
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
         await testClientA.waitForVisibleWithText("//*[contains(@class,'members-header-link')]/span", "1");

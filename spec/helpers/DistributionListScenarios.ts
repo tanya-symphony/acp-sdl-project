@@ -50,19 +50,20 @@ export async function fillDataStepCreateDL(initiator: DesktopClient, sdlName: st
     }
     await initiator.click("//*[contains(@class, 'Select-multi-value-wrapper')][contains(@id,'react-select')]");
     await initiator.click("//*[@class='Select-menu-outer']");
-    if (att1 !== null || att1 !== undefined) {
+
+    if (att1 !== null && att1 !== undefined) {
         await initiator.waitForVisible("//*[@class='Select-menu-outer']//*[./input[@id='" + att1 + "'][@type='radio']]/label");
         await initiator.click("//*[@class='Select-menu-outer']//*[./input[@id='" + att1 + "'][@type='radio']]/label");
     }
-    if (att2 !== null || att2 !== undefined) {
+    if (att2 !== null && att2 !== undefined) {
         await initiator.waitForVisible("//*[@class='Select-menu-outer']//*[./input[@id='" + att2 + "'][@type='radio']]/label");
         await initiator.click("//*[@class='Select-menu-outer']//*[./input[@id='" + att2 + "'][@type='radio']]/label");
     }
-    if (att3 !== null || att3 !== undefined) {
+    if (att3 !== null && att3 !== undefined) {
         await initiator.waitForVisible("//*[@class='Select-menu-outer']//*[./input[@id='" + att3 + "'][@type='radio']]/label");
         await initiator.click("//*[@class='Select-menu-outer']//*[./input[@id='" + att3 + "'][@type='radio']]/label");
     }
-    if (att4 !== null || att4 !== undefined) {
+    if (att4 !== null && att4 !== undefined) {
         await initiator.waitForVisible("//*[@class='Select-menu-outer']//*[./input[@id='" + att4 + "'][@type='radio']]/label");
         await initiator.click("//*[@class='Select-menu-outer']//*[./input[@id='" + att4 + "'][@type='radio']]/label");
     }
@@ -76,20 +77,29 @@ export async function fillDataStepCreateDL(initiator: DesktopClient, sdlName: st
 export async function checkDataStepCreateDL(initiator: DesktopClient, sdlName: string,
                                             att1: string, att2: string, att3: string, att4: string, external: boolean) {
     await initiator.waitForVisibleWithValue(dlElements.listNameInput, sdlName);
-    await initiator.waitForVisible("//*[@class='Select-value-label'][contains(@id,'-value-0')]/span[.='" + att1 + "']");
-    await initiator.waitForVisible("//*[@class='Select-value-label'][contains(@id,'-value-1')]/span[.='" + att2 + "']");
-    await initiator.waitForVisible("//*[@class='Select-value-label'][contains(@id,'-value-2')]/span[.='" + att3 + "']");
-    await initiator.waitForVisible("//*[@class='Select-value-label'][contains(@id,'-value-3')]/span[.='" + att4 + "']");
+    if (att1 !== null && att1 !== undefined) {
+        await initiator.waitForVisible("//*[@class='Select-value-label'][contains(@id,'-value-')]/span[.='" + att1 + "']");
+        await initiator.waitForVisible("//*[@class='list-display-name-box']" +
+            "/*[@class='list-attribute-tag'][contains(text(), '" + att1 + "')]");
+    }
+    if (att2 !== null && att2 !== undefined) {
+        await initiator.waitForVisible("//*[@class='Select-value-label'][contains(@id,'-value-')]/span[.='" + att2 + "']");
+        await initiator.waitForVisible("//*[@class='list-display-name-box']" +
+            "/*[@class='list-attribute-tag'][contains(text(), '" + att2 + "')]");
+    }
+    if (att3 !== null && att3 !== undefined) {
+        await initiator.waitForVisible("//*[@class='Select-value-label'][contains(@id,'-value-')]/span[.='" + att3 + "']");
+        await initiator.waitForVisible("//*[@class='list-display-name-box']" +
+            "/*[@class='list-attribute-tag'][contains(text(), '" + att3 + "')]");
+    }
+    if (att4 !== null && att4 !== undefined) {
+        await initiator.waitForVisible("//*[@class='Select-value-label'][contains(@id,'-value-')]/span[.='" + att4 + "']");
+        await initiator.waitForVisible("//*[@class='list-display-name-box']" +
+            "/*[@class='list-attribute-tag'][contains(text(), '" + att4 + "')]");
+    }
     await initiator.waitForVisible("//*[@class='list-display-name-box']/span[contains(text(), '" +
         sdlName + "')]");
-    await initiator.waitForVisible("//*[@class='list-display-name-box']" +
-        "/*[@class='list-attribute-tag'][contains(text(), '" + att1 + "')]");
-    await initiator.waitForVisible("//*[@class='list-display-name-box']" +
-        "/*[@class='list-attribute-tag'][contains(text(), '" + att2 + "')]");
-    await initiator.waitForVisible("//*[@class='list-display-name-box']" +
-        "/*[@class='list-attribute-tag'][contains(text(), '" + att3 + "')]");
-    await initiator.waitForVisible("//*[@class='list-display-name-box']" +
-        "/*[@class='list-attribute-tag'][contains(text(), '" + att4 + "')]");
+
     if (external) {
     await initiator.waitForVisibleWithText("//*[@class='list-display-name-box']/*[@class='external-pod-tag']",
         "EXT"); } else {await initiator.waitForNotVisibleWithText("//*[@class='list-display-name-box']" +

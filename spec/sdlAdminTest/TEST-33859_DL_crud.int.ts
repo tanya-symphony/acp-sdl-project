@@ -21,13 +21,13 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
     let pmpHelper: PmpUser;
     let value: string;
     const att1: string = "Margin";
-    const att2: string  = "Equities";
+    const att2: string  = "Securities";
     const att3: string  = "NA";
     const att4: string  = "BAU";
     const sdlName: string = "SDL AUTO EXT " + Date.now().toString() + Math.random().toString().slice(2);
     // Update
     const att1Update: string = "Confirmation";
-    const att2Update: string  = "Fixed Income";
+    const att2Update: string  = "Equities";
     const att3Update: string  = "EMEA";
     const att4Update: string  = "Escalation";
     const sdlNameUpdate: string = "UPDATED SDL AUTO EXT" + Date.now().toString() + Math.random().toString().slice(2);
@@ -37,6 +37,13 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
     const userEntitlements = {
         isExternalRoomEnabled: true };
 
+    const userMoreInfoForTest = {
+        function: [att1],
+        instrument: [att2],
+        marketCoverage: [att3],
+        responsibility: [att4],
+    };
+
     before(async () => {
         // Allowing all errors from client since this is just an example project
         TestClientFactory.globalLogWhitelist = [
@@ -44,7 +51,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         ];
         await pmpHelper.updatePodSetting("https://warpdrive-lab.dev.symphony.com/env/tetianak-pod1/sbe/support/v1/system/settings/enable-distribution-list-management", "ENABLE");
         [testUser01, testUser02, testUser03, testUser05] = await testClientHelper.setupTestUsers(["A", "B", "C", "AddRemoveTest"],
-            { entitlements: userEntitlements } );
+            { entitlements: userEntitlements, userMoreInfo: userMoreInfoForTest });
         [testUser04] = await testClientHelper.setupTestUsers(["NoEntitlementsCanChat"]);
         [testClientA] = await testClientHelper.setupDesktopClients(["Tania"],
             {user: { roles: ["INDIVIDUAL", "DISTRIBUTION_LIST_MANAGER", "SUPER_ADMINISTRATOR", "L1_SUPPORT", "SUPER_COMPLIANCE_OFFICER"]}});
@@ -75,10 +82,10 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await testClientA.waitForVisibleWithText("//*[@class='settings-management']/*/*[@class='warning-text']", "You must select at least one attribute");
         // Enter data
         // tslint:disable-next-line:max-line-length
-        await DistributionListScenarios.fillDataStepCreateDL(testClientA, sdlName, att1, att2, att3, att4, externalType);
+        await DistributionListScenarios.fillDataStepCreateDL(testClientA, sdlName, att1, null, att3, att4, externalType);
         // Checks
         // tslint:disable-next-line:max-line-length
-        await DistributionListScenarios.checkDataStepCreateDL(testClientA, sdlName, att1, att2, att3, att4, externalType);
+        await DistributionListScenarios.checkDataStepCreateDL(testClientA, sdlName, att1, null, att3, att4, externalType);
         // Go to Member list
         await testClientA.click(dlElements.addMembersButtonModal);
         await testClientA.waitForVisible(dlElements.searchBarInputMemberList);
@@ -99,7 +106,8 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await testClientA.waitForNotVisible(dlElements.distributionListsModal);
         await testClientA.waitForVisible("//*[contains(@class,'list-name-box-with-tag')][.='" + sdlName + "']");
         await testClientA.waitForVisible("//div[@role='row'][./*[.='" + sdlName + "']]//*[@class='list-attribute-tag'][.='" + att1 + "']");
-        await testClientA.waitForVisible("//div[@role='row'][./*[.='" + sdlName + "']]//*[@class='list-attribute-tag'][.='" + att2 + "']");
+        // await testClientA.waitForVisible("//div[@role='row']
+        // [./*[.='" + sdlName + "']]//*[@class='list-attribute-tag'][.='" + att2 + "']");
         await testClientA.waitForVisible("//div[@role='row'][./*[.='" + sdlName + "']]//*[@class='list-attribute-tag'][.='" + att3 + "']");
         await testClientA.waitForVisible("//div[@role='row'][./*[.='" + sdlName + "']]//*[@class='list-attribute-tag'][.='" + att4 + "']");
         await testClientA.waitForVisible("//div[@role='row'][./*[.='" + sdlName + "']]//*[@class='external-pod-tag']");
@@ -212,7 +220,6 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         // Search and select user
         await testClientA.waitForVisible(dlElements.searchBarInputMemberList);
         await testClientA.setValue(dlElements.searchBarInputMemberList, testUser05.username);
-        await testClientA.waitForNotVisible(dlElements.loaderMemberList);
         await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser05);
         await testClientA.waitForVisible(dlElements.resetSearchButtonMemberList);
         await testClientA.click(dlElements.resetSearchButtonMemberList);
