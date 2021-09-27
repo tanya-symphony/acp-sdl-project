@@ -220,11 +220,13 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         // Search and select user
         await testClientA.waitForVisible(dlElements.searchBarInputMemberList);
         await testClientA.setValue(dlElements.searchBarInputMemberList, testUser05.username);
+        await testClientA.waitForNotVisible
+        (`//*[./*/*/label[@for='user ${testUser01.userId}']]/*[.='${testUser01.displayname}']`);
         await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser05);
         await testClientA.waitForVisible(dlElements.resetSearchButtonMemberList);
         await testClientA.click(dlElements.resetSearchButtonMemberList);
         await testClientA.waitForNotVisible(dlElements.loaderMemberList);
-        await testClientA.sleep(699);
+        await testClientA.sleep(899);
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser02.userId + "']]", "class");
