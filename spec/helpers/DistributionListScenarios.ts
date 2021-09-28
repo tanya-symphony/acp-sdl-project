@@ -10,7 +10,7 @@ import * as dlElements from "../pageObjects/acp/dl/IDistributionListPage";
 export async function checkDLPage(initiator: DesktopClient) {
     await initiator.waitForVisibleWithText(dlElements.headerDLList, "Groups (Distribution Lists)");
     await initiator.waitForVisible(dlElements.createDlButton);
-    await initiator.waitForNotVisible("//*[@data-test-id='p6kl7M869p']/a[.='Audit Trail']");
+    await initiator.waitForVisible("//*[@data-test-id='p6kl7M869p']/a[.='Audit Trail']");
 }
 
 /**
