@@ -172,6 +172,21 @@ node ("fe-integration") {
                     }
                 }
             }
+            if(params.SEND_RESULTS_TO_XRAY) {
+                    nvm('v12.13.0') {
+                        withCredentials([
+                                string(credentialsId: "XRAY_CLIENT_ID", variable: 'XRAY_CLIENT_ID'),
+                                string(credentialsId: "XRAY_CLIENT_SECRET", variable: 'XRAY_CLIENT_SECRET')
+                        ]) {
+                            echo "Sending results to XRay ..."
+                            try {
+                                sh "node node_modules/.bin/report-xray -u ${XRAY_CLIENT_ID} -p ${XRAY_CLIENT_SECRET} -i ${params.XRAY_TEST_PLAN_ID} -r ${params.XRAY_TEST_EXECUTION_ID} -e ${params.DF2_TARGET_ENV} -f test-results-*.xml -s ${params.XRAY_TEST_EXECUTION_SUMMARY}"
+                            } catch (error) {
+                                echo "Sending XRay results failed: ${error}"
+                            }
+                        }
+                    }
+                }
         }
         finally {
             stage("Archive artifacts") {
