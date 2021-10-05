@@ -168,33 +168,35 @@ node ("fe-integration") {
                                     --support-portal-keystore-alias ${testSupportPortalKeyStoreAlias}
                         """
                             }
-
-                            sh "curl ${env.BUILD_URL}/artifact/test-results-01.xml --output test-results-01.xml"
                         }
                     }
                 }
             }
-            if(params.SEND_RESULTS_TO_XRAY) {
-                    nvm('v12.13.0') {
-                        withCredentials([
-                                string(credentialsId: "XRAY_CLIENT_ID", variable: 'XRAY_CLIENT_ID'),
-                                string(credentialsId: "XRAY_CLIENT_SECRET", variable: 'XRAY_CLIENT_SECRET')
-                        ]) {
-                            echo "Sending results to XRay ..."
-                            try {
-                                sh "node node_modules/.bin/report-xray -u ${XRAY_CLIENT_ID} -p ${XRAY_CLIENT_SECRET} -i ${params.XRAY_TEST_PLAN_ID} -r ${params.XRAY_TEST_EXECUTION_ID} -e ${params.DF2_TARGET_ENV} -f test-results-*.xml -s ${params.XRAY_TEST_EXECUTION_SUMMARY}"
-                            } catch (error) {
-                                echo "Sending XRay results failed: ${error}"
-                            }
-                        }
-                    }
-                }
         }
         finally {
             stage("Archive artifacts") {
                 try {
                     archiveArtifacts artifacts: "logs/**/*", allowEmptyArchive: true, fingerprint: true
                     junit testResults: "test-results/**/*.xml", allowEmptyResults: true
+
+                    sh "curl ${env.BUILD_URL}/artifact/test-results-summary.xml --output test-results-summary.xml"
+
+                    if(params.SEND_RESULTS_TO_XRAY) {
+                        nvm('v12.13.0') {
+                            withCredentials([
+                                    string(credentialsId: "XRAY_CLIENT_ID", variable: 'XRAY_CLIENT_ID'),
+                                    string(credentialsId: "XRAY_CLIENT_SECRET", variable: 'XRAY_CLIENT_SECRET')
+                            ]) {
+                                echo "Sending results to XRay ..."
+                                try {
+                                    sh "node node_modules/.bin/report-xray -u ${XRAY_CLIENT_ID} -p ${XRAY_CLIENT_SECRET} -i ${params.XRAY_TEST_PLAN_ID} -r ${params.XRAY_TEST_EXECUTION_ID} -f test-results-*.xml -s ${params.XRAY_TEST_EXECUTION_SUMMARY}"
+                                } catch (error) {
+                                    echo "Sending XRay results failed: ${error}"
+                                }
+                            }
+                        }
+                    }
+
                 } finally {
                     if (sh(returnStdout: true, script: "docker ps -a -q")) {
                         sh 'docker rm $(docker stop $(docker ps -a -q))'
