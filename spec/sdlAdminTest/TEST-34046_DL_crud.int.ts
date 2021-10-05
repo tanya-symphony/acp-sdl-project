@@ -78,7 +78,6 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         // Check errors
         await testClientA.click(dlElements.addMembersButtonModal);
         await testClientA.waitForVisibleWithText("//*[@class='settings-management']/*/*[@class='warning-text']", "You must provide a non-empty name");
-        await testClientA.waitForVisibleWithText("//*[@class='settings-management']/*/*[@class='warning-text']", "You must select at least one attribute");
         // Enter data
         await DistributionListScenarios.fillDataStepCreateDL(testClientA, sdlName, att1, null, att3, att4,
             externalType);

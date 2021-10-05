@@ -78,9 +78,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         await DistributionListScenarios.checkModalForDLCreation(testClientA);
         // Check errors
         await testClientA.click(dlElements.addMembersButtonModal);
-        await testClientA.waitForVisibleWithText("//*[@class='settings-management']/*/*[@class='warning-text']", "You must provide a non-empty name");
-        await testClientA.waitForVisibleWithText("//*[@class='settings-management']/*/*[@class='warning-text']", "You must select at least one attribute");
-        // Enter data
+        await testClientA.waitForVisibleWithText("//*[@class='settings-management']/*/*[@class='warning-text']", "You must provide a non-empty name");   // Enter data
         // tslint:disable-next-line:max-line-length
         await DistributionListScenarios.fillDataStepCreateDL(testClientA, sdlName, att1, null, att3, att4, externalType);
         // Checks
@@ -220,13 +218,11 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         // Search and select user
         await testClientA.waitForVisible(dlElements.searchBarInputMemberList);
         await testClientA.setValue(dlElements.searchBarInputMemberList, testUser05.username);
-        await testClientA.waitForNotVisible
-        (`//*[./*/*/label[@for='user ${testUser01.userId}']]/*[.='${testUser01.displayname}']`);
         await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser05);
         await testClientA.waitForVisible(dlElements.resetSearchButtonMemberList);
         await testClientA.click(dlElements.resetSearchButtonMemberList);
         await testClientA.waitForNotVisible(dlElements.loaderMemberList);
-        await testClientA.sleep(899);
+        await testClientA.sleep(699);
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser02.userId + "']]", "class");
