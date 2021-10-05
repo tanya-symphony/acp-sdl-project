@@ -168,6 +168,8 @@ node ("fe-integration") {
                                     --support-portal-keystore-alias ${testSupportPortalKeyStoreAlias}
                         """
                             }
+
+                            sh "curl ${env.BUILD_URL}/artifact/test-results-01.xml --output test-results-01.xml"
                         }
                     }
                 }
