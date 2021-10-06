@@ -27,7 +27,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         [testUser01] = await testClientHelper.setupTestUsers([testUserName]);
         await pmpHelper.updatePodSetting("https://warpdrive-lab.dev.symphony.com/env/tetianak-pod1/sbe/support/v1/system/settings/enable-distribution-list-management", "ENABLE");
         // Connecting to Symphony webpage
-        [testClientA] = await testClientHelper.setupDesktopClients(["Tania"],
+        [testClientA] = await testClientHelper.setupDesktopClients(["SDLTEST"],
             {user: { roles: ["INDIVIDUAL", "SUPER_ADMINISTRATOR", "L1_SUPPORT", "SUPER_COMPLIANCE_OFFICER"]}});    });
 
     beforeEach(async () => {

@@ -53,7 +53,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         [testUser01, testUser02, testUser03, testUser05] = await testClientHelper.setupTestUsers(["A", "B", "C", "AddRemoveTest"],
             { entitlements: userEntitlements, userMoreInfo: userMoreInfoForTest });
         [testUser04] = await testClientHelper.setupTestUsers(["NoEntitlementsCanChat"]);
-        [testClientA] = await testClientHelper.setupDesktopClients(["Tania"],
+        [testClientA] = await testClientHelper.setupDesktopClients(["SDLTEST"],
             {user: { roles: ["INDIVIDUAL", "DISTRIBUTION_LIST_MANAGER", "SUPER_ADMINISTRATOR", "L1_SUPPORT", "SUPER_COMPLIANCE_OFFICER"]}});
     });
 

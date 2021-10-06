@@ -52,7 +52,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
             { userMoreInfo: userMoreInfoForTest });
         [testUser01, testUser02, testUser03, testUser05] = await testClientHelper.setupTestUsers(["A", "B", "C", "AddRemoveTest"],
             { entitlements: userEntitlements, userMoreInfo: userMoreInfoForTest });
-        [testClientA] = await testClientHelper.setupDesktopClients(["Tania"],
+        [testClientA] = await testClientHelper.setupDesktopClients(["SDLTEST"],
             {user: { roles: ["INDIVIDUAL", "DISTRIBUTION_LIST_MANAGER", "SUPER_ADMINISTRATOR", "L1_SUPPORT", "SUPER_COMPLIANCE_OFFICER"]}});
     });
 
@@ -78,6 +78,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         // Check errors
         await testClientA.click(dlElements.addMembersButtonModal);
         await testClientA.waitForVisibleWithText("//*[@class='settings-management']/*/*[@class='warning-text']", "You must provide a non-empty name");
+        await testClientA.waitForVisibleWithText("//*[@class='settings-management']/*/*[@class='warning-text']", "You must select at least one attribute");
         // Enter data
         await DistributionListScenarios.fillDataStepCreateDL(testClientA, sdlName, att1, null, att3, att4,
             externalType);

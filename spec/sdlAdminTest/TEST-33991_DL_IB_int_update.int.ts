@@ -48,7 +48,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         // Connecting to Symphony webpage
         [testUser01, testUser02] = await testClientHelper.setupTestUsers(["IB01", "IB02"],
             { entitlements: userEntitlements, userMoreInfo: userMoreInfoForTest });
-        [testClientA] = await testClientHelper.setupDesktopClients(["Ib-test"],
+        [testClientA] = await testClientHelper.setupDesktopClients(["IBTEST"],
             {user: { roles: ["INDIVIDUAL", "DISTRIBUTION_LIST_MANAGER", "SUPER_ADMINISTRATOR", "L1_SUPPORT", "SUPER_COMPLIANCE_OFFICER"]}});
     });
 
