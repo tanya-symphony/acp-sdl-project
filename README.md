@@ -10,3 +10,5 @@ For the status of this issue, see [ticket](https://perzoinc.atlassian.net/browse
 
 
 See 'scripts' in package.json for how sdlAdminTest map to mocha for running the specific tests.
+
+Test-cases are mentioned on this page: https://perzoinc.atlassian.net/wiki/spaces/AC/pages/2204766078/ACP+SDL+automation
