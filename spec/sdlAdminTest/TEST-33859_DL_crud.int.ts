@@ -49,7 +49,9 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         TestClientFactory.globalLogWhitelist = [
             /.*/,
         ];
-        await pmpHelper.updatePodSetting("https://warpdrive-lab.dev.symphony.com/env/tetianak-pod1/sbe/support/v1/system/settings/enable-distribution-list-management", "ENABLE");
+
+        await pmpHelper.updatePodSetting(testClientHelper.getHost().backendUrl.replace("/admin-console", "") +
+            "/support/v1/system/settings/enable-distribution-list-management", "ENABLE");
         [testUser01, testUser02, testUser03, testUser05] = await testClientHelper.setupTestUsers(["A", "B", "C", "AddRemoveTest"],
             { entitlements: userEntitlements, userMoreInfo: userMoreInfoForTest });
         [testUser04] = await testClientHelper.setupTestUsers(["NoEntitlementsCanChat"]);

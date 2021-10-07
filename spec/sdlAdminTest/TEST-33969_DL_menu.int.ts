@@ -18,7 +18,8 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         TestClientFactory.globalLogWhitelist = [
             /.*/,
         ];
-        await pmpHelper.updatePodSetting("https://warpdrive-lab.dev.symphony.com/env/tetianak-pod1/sbe/support/v1/system/settings/enable-distribution-list-management", "ENABLE");
+        await pmpHelper.updatePodSetting(testClientHelper.getHost().backendUrl.replace("/admin-console", "") +
+            "/support/v1/system/settings/enable-distribution-list-management", "ENABLE");
         // Connecting to Symphony webpage
         [testClientA] = await testClientHelper.setupDesktopClients(["SDLTEST"], {user: { roles: ["INDIVIDUAL", "SUPER_ADMINISTRATOR", "L1_SUPPORT", "SUPER_COMPLIANCE_OFFICER"]}});
     });
