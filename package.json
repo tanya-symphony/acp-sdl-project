@@ -10,7 +10,7 @@
     "sdl-admin-test": "npm run lint && ./node_modules/.bin/mocha -r ts-node/register  --timeout 90000 spec/sdlAdminTest/*.int.ts --reporter @symphony/rtc-greenkeeper-lib/dist/reporter --reporter xunit --reporter-option output=test-results/sdl_acp/results.xml"
   },
   "devDependencies": {
-    "@symphony/rtc-greenkeeper-lib": "^1.0.392",
+    "@symphony/rtc-greenkeeper-lib": "^1.0.402",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.14",
     "ts-node": "^8.5.4",
