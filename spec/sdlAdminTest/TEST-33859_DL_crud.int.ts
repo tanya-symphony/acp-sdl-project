@@ -49,7 +49,7 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         TestClientFactory.globalLogWhitelist = [
             /.*/,
         ];
-        
+
         [testUser01, testUser02, testUser03, testUser05] = await testClientHelper.setupTestUsers(["A", "B", "C", "AddRemoveTest"],
             { entitlements: userEntitlements, userMoreInfo: userMoreInfoForTest });
         [testUser04] = await testClientHelper.setupTestUsers(["NoEntitlementsCanChat"]);
@@ -218,11 +218,14 @@ describeWithTestClient("Targetting Symphony admin-console", (testClientHelper: T
         // Search and select user
         await testClientA.waitForVisible(dlElements.searchBarInputMemberList);
         await testClientA.setValue(dlElements.searchBarInputMemberList, testUser05.username);
+        await testClientA.sleep(299);
         await DistributionListScenarios.selectMemberStepCreateDL(testClientA, testUser05);
+        await testClientA.sleep(299);
         await testClientA.waitForVisible(dlElements.resetSearchButtonMemberList);
+        await testClientA.waitForNotVisible(dlElements.loaderMemberList);
         await testClientA.click(dlElements.resetSearchButtonMemberList);
         await testClientA.waitForNotVisible(dlElements.loaderMemberList);
-        await testClientA.sleep(699);
+        await testClientA.sleep(299);
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser01.userId + "']]", "class");
         await testClientA.assert(() => expect(value).toContain("is-selected"));
         value = await testClientA.getElementAttribute("//div[label[@for='user " + testUser02.userId + "']]", "class");
